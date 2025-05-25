@@ -1,262 +1,378 @@
-// const video = document.getElementById('video');
+// app/static/js/proctor.js
+;(async () => {
+  const MODEL_PATH = '/static/models';
+  const DETECT_INTERVAL = 1500;
+  const MATCH_THRESHOLD = 0.6;
+  let userDescriptor = null;
+  let isVerifying = true;
 
-// console.log("Loading models...");
+  // Load face-api models
+  await Promise.all([
+    faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_PATH),
+    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_PATH),
+    faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_PATH)
+  ]);
 
-// Promise.all([
-//   faceapi.nets.tinyFaceDetector.loadFromUri('/static/models'),
-//   faceapi.nets.faceLandmark68Net.loadFromUri('/static/models'),
-//   faceapi.nets.faceRecognitionNet.loadFromUri('/static/models')
-// ]).then(() => {
-//   console.log("Models loaded");
-//   startVideo();  // or whatever follows
-// }).catch(err => console.error("Model loading error:", err));
-
-
-// // video.addEventListener('play', () => {
-// //   const canvas = faceapi.createCanvasFromMedia(video);
-// //   document.body.append(canvas);
-// //   const displaySize = { width: video.width, height: video.height };
-// //   faceapi.matchDimensions(canvas, displaySize);
-
-// //   setInterval(async () => {
-// //     const detections = await faceapi.detectAllFaces(
-// //       video, new faceapi.TinyFaceDetectorOptions()
-// //     );
-
-// //     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-// //     faceapi.draw.drawDetections(canvas, faceapi.resizeResults(detections, displaySize));
-
-// //     if (detections.length === 0) {
-// //       sendWarning("No face detected");
-// //     } else if (detections.length > 1) {
-// //       sendWarning("Multiple faces detected");
-// //     } else {
-// //       const box = detections[0].box;
-// //       if (box.width < 100 || box.height < 100) {
-// //         sendWarning("Face not centered properly");
-// //       }
-// //     }
-
-// //   }, 3000);
-// // });
-
-// video.addEventListener('loadedmetadata', () => {
-//   const canvas = faceapi.createCanvasFromMedia(video);
-//   document.body.append(canvas);
-//   const displaySize = { width: video.videoWidth, height: video.videoHeight };
-//   faceapi.matchDimensions(canvas, displaySize);
-
-//   setInterval(async () => {
-//     const detections = await faceapi.detectAllFaces(
-//       video, new faceapi.TinyFaceDetectorOptions()
-//     );
-
-//     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-//     faceapi.draw.drawDetections(canvas, faceapi.resizeResults(detections, displaySize));
-
-//     if (detections.length === 0) {
-//       sendWarning("No face detected");
-//     } else if (detections.length > 1) {
-//       sendWarning("Multiple faces detected");
-//     } else {
-//       const box = detections[0].box;
-//       if (box.width < 100 || box.height < 100) {
-//         sendWarning("Face not centered properly");
-//       }
-//     }
-
-//   }, 3000);
-// });
-
-// function showAlert(reason) {
-//   let alertBox = document.getElementById("alertBox");
-//   if (!alertBox) {
-//     alertBox = document.createElement("div");
-//     alertBox.id = "alertBox";
-//     alertBox.style.cssText = "position:fixed;top:10px;right:10px;background:red;color:white;padding:10px;border-radius:5px;z-index:1000;";
-//     document.body.appendChild(alertBox);
-//   }
-//   alertBox.innerText = reason;
-// }
-
-
-// function sendWarning(reason) {
-//   showAlert(reason);  // Show on UI
-
-//   fetch('/raise-warning', {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify({
-//       reason: reason,
-//       timestamp: new Date().toISOString()
-//     })
-//   }).then(res => {
-//     if (!res.ok) {
-//       console.error('Warning failed to send');
-//     }
-//   });
-// }
-
-
-
-// const video = document.getElementById('video');
-// const warning = document.getElementById('warning');
-
-// Promise.all([
-//   faceapi.nets.tinyFaceDetector.loadFromUri('/static/models'),
-//   faceapi.nets.faceLandmark68Net.loadFromUri('/static/models'),
-//   faceapi.nets.faceRecognitionNet.loadFromUri('/static/models')
-// ]).then(() => {
-//   console.log("Models loaded");
-//   startVideo();
-// });
-
-// function startVideo() {
-//   navigator.mediaDevices.getUserMedia({ video: {} })
-//     .then(stream => video.srcObject = stream)
-//     .catch(err => console.error("Webcam error:", err));
-// }
-
-// video.addEventListener('play', () => {
-//   const canvas = document.getElementById('overlay');
-//   const displaySize = { width: video.width, height: video.height };
-//   faceapi.matchDimensions(canvas, displaySize);
-
-//   const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 512, scoreThreshold: 0.5 });
-
-//   setInterval(async () => {
-//     const detections = await faceapi.detectAllFaces(video, options);
-//     const resized = faceapi.resizeResults(detections, displaySize);
-
-//     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-//     faceapi.draw.drawDetections(canvas, resized);
-
-//     if (resized.length === 0) {
-//       warning.innerText = "⚠️ No face detected";
-//     } else {
-//       warning.innerText = ""; // Clear warning
-//     }
-//   }, 1000);
-// });
-
-
-// ------------------------------------------------------------>
-// New Code generated
-
-const video = document.getElementById('video');
-
-console.log("Loading models...");
-
-Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri('/static/models'),
-  faceapi.nets.faceLandmark68Net.loadFromUri('/static/models'),
-  faceapi.nets.faceRecognitionNet.loadFromUri('/static/models')
-]).then(() => {
-  console.log("Models loaded");
-  startVideo();
-}).catch(err => console.error("Model loading error:", err));
-
-function startVideo() {
-  navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
-      video.srcObject = stream;
-      video.play();
-    })
-    .catch(err => {
-      console.error("Failed to access webcam:", err);
-    });
-}
-
-video.addEventListener('play', () => {
-  const canvas = faceapi.createCanvasFromMedia(video);
-  document.body.appendChild(canvas);
-  const displaySize = { width: video.videoWidth, height: video.videoHeight };
-  faceapi.matchDimensions(canvas, displaySize);
-
-  setInterval(async () => {
-    const detections = await faceapi.detectAllFaces(
-      video,
-      new faceapi.TinyFaceDetectorOptions()
-    );
-
-    const resizedDetections = faceapi.resizeResults(detections, displaySize);
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    faceapi.draw.drawDetections(canvas, resizedDetections);
-
-    if (detections.length === 0) {
-      sendWarning("No face detected");
-    } else if (detections.length > 1) {
-      sendWarning("Multiple faces detected");
-    } else {
-      const box = detections[0].box;
-      if (box.width < 100 || box.height < 100) {
-        sendWarning("Face not centered properly");
+  // Get current user's face descriptor from uploaded image
+  async function loadUserDescriptor() {
+    try {
+      // Get current username
+      const userRes = await fetch('/api/current-user');
+      const { name } = await userRes.json();
+      
+      // Load registered face image
+      const img = await faceapi.fetchImage(`/static/uploads/${name}.jpg`);
+      
+      // Generate face descriptor
+      const detection = await faceapi.detectSingleFace(img)
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+      
+      if (!detection) {
+        showAlert('No face found in registration photo!');
+        return null;
       }
+      
+      return detection.descriptor;
+    } catch (error) {
+      console.error('Descriptor load failed:', error);
+      showAlert('Face recognition system error');
+      return null;
     }
-  }, 3000);
-});
-
-video.addEventListener('loadedmetadata', () => {
-  const canvas = faceapi.createCanvasFromMedia(video);
-  document.body.append(canvas);
-  const displaySize = { width: video.videoWidth, height: video.videoHeight };
-  faceapi.matchDimensions(canvas, displaySize);
-
-  setInterval(async () => {
-    // Use the more accurate SSD Mobilenet v1 detector with min confidence 0.5
-    const detections = await faceapi.detectAllFaces(
-      video,
-      new faceapi.SsdMobilenetv1Options({ minConfidence: 0.5 })
-    );
-
-    console.log('Detections:', detections);
-
-    const resizedDetections = faceapi.resizeResults(detections, displaySize);
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    faceapi.draw.drawDetections(canvas, resizedDetections);
-
-    if (detections.length === 0) {
-      sendWarning("No face detected");
-    } else if (detections.length > 1) {
-      sendWarning("Multiple faces detected");
-    } else {
-      const box = detections[0].box;
-      // Commented out temporarily to reduce false warnings during debugging
-      // if (box.width < 100 || box.height < 100) {
-      //   sendWarning("Face not centered properly");
-      // }
-    }
-
-  }, 3000);
-});
-
-
-function showAlert(reason) {
-  let alertBox = document.getElementById("alertBox");
-  if (!alertBox) {
-    alertBox = document.createElement("div");
-    alertBox.id = "alertBox";
-    alertBox.style.cssText = "position:fixed;top:10px;right:10px;background:red;color:white;padding:10px;border-radius:5px;z-index:1000;";
-    document.body.appendChild(alertBox);
   }
-  alertBox.innerText = reason;
-}
 
-function sendWarning(reason) {
-  showAlert(reason);  // Show warning on UI
+  // Initialize webcam
+  async function initializeWebcam() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+          facingMode: 'user'
+        }
+      });
 
-  fetch('/raise-warning', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      reason: reason,
-      timestamp: new Date().toISOString()
-    })
-  }).then(res => {
-    if (!res.ok) {
-      console.error('Warning failed to send');
+      const video = document.getElementById('video');
+      video.srcObject = stream;
+      video.style.transform = 'scaleX(-1)';
+      
+      await new Promise(resolve => video.onloadedmetadata = resolve);
+      await video.play();
+      
+      return true;
+    } catch (error) {
+      showAlert('Camera access required!');
+      console.error('Webcam error:', error);
+      return false;
     }
-  });
-}
+  }
+
+  // Face verification logic
+  async function verifyFace() {
+    if (!userDescriptor || !isVerifying) return;
+
+    try {
+      const detections = await faceapi.detectAllFaces(video)
+        .withFaceLandmarks()
+        .withFaceDescriptors();
+
+      if (detections.length === 0) {
+        updateStatus('No face detected', 'warning');
+        return warn('no_face_detected');
+      }
+
+      let isMatch = false;
+      for (const detection of detections) {
+        const distance = faceapi.euclideanDistance(
+          userDescriptor, 
+          detection.descriptor
+        );
+        
+        if (distance <= MATCH_THRESHOLD) {
+          isMatch = true;
+          break;
+        }
+      }
+
+      if (isMatch) {
+        updateStatus('Identity Verified ✅', 'success');
+      } else {
+        updateStatus('Unverified User ⚠️', 'error');
+        warn('unverified_face_detected');
+      }
+    } catch (error) {
+      console.error('Verification error:', error);
+    }
+  }
+
+  // Status updates
+  function updateStatus(text, type) {
+    const statusElem = document.getElementById('verification-status');
+    if (!statusElem) return;
+    
+    statusElem.textContent = text;
+    statusElem.className = `status-${type}`;
+  }
+
+  // Alert system
+  function showAlert(message) {
+    const alert = document.createElement('div');
+    alert.className = 'proctor-alert';
+    alert.innerHTML = `
+      <div class="alert-content">
+        ⚠️ ${message}
+      </div>
+    `;
+    document.body.appendChild(alert);
+    setTimeout(() => alert.remove(), 5000);
+  }
+
+  // Event reporting
+  function warn(reason) {
+    fetch('/api/proctor/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        events: [{
+          reason,
+          timestamp: new Date().toISOString()
+        }]
+      })
+    }).catch(error => console.error('Event report failed:', error));
+  }
+
+  // Main initialization
+  async function initializeProctoring() {
+    // Load user's face data
+    userDescriptor = await loadUserDescriptor();
+    if (!userDescriptor) return;
+
+    // Initialize camera
+    if (!await initializeWebcam()) return;
+
+    // Start verification loop
+    setInterval(verifyFace, DETECT_INTERVAL);
+    updateStatus('Verification Active', 'info');
+
+    // Cleanup loading screen
+    document.getElementById('loading')?.remove();
+  }
+
+  // Start the system
+  initializeProctoring();
+})();
+// // app/static/js/proctor.js
+// ;(async () => {
+//   const MODEL_PATH = '/static/models';
+//   const DETECT_INTERVAL = 1500;
+//   const FLUSH_INTERVAL = 10000;
+//   let isDetecting = false;
+//   let faceDetector;
+
+//   // UI Elements
+//   const video = document.getElementById('video');
+//   const statusElement = document.getElementById('status');
+
+//   // ***********************
+//   // Model Initialization
+//   // ***********************
+
+//   async function initializeModels() {
+//     try {
+//       // Try loading SSD Mobilenet first
+//       await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_PATH);
+//       faceDetector = new faceapi.SsdMobilenetv1Options({
+//         minConfidence: 0.5
+//       });
+//       console.log('Using SSD Mobilenet detector');
+      
+//       // Fallback to Tiny Face Detector if SSD fails
+//     } catch {
+//       console.log('Falling back to Tiny Face Detector');
+//       await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_PATH);
+//       faceDetector = new faceapi.TinyFaceDetectorOptions({
+//         inputSize: 512,
+//         scoreThreshold: 0.4
+//       });
+//     }
+
+//     // Load additional models
+//     await Promise.all([
+//       faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_PATH),
+//       faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_PATH)
+//     ]);
+
+//     updateStatus('All models loaded ✅', 'success');
+//     return true;
+//   }
+
+//   // ***********************
+//   // Webcam Setup
+//   // ***********************
+
+//   async function initializeWebcam() {
+//     try {
+//       const stream = await navigator.mediaDevices.getUserMedia({
+//         video: {
+//           width: { ideal: 1280 },
+//           height: { ideal: 720 },
+//           facingMode: 'user'
+//         }
+//       });
+
+//       video.srcObject = stream;
+//       video.style.transform = 'scaleX(-1)';
+      
+//       await new Promise(resolve => {
+//         video.onloadedmetadata = () => {
+//           video.width = video.videoWidth;
+//           video.height = video.videoHeight;
+//           resolve();
+//         };
+//       });
+
+//       await video.play();
+//       return true;
+//     } catch (error) {
+//       showAlert('Camera access required!');
+//       console.error('Webcam error:', error);
+//       return false;
+//     }
+//   }
+
+//   // ***********************
+//   // Detection Core
+//   // ***********************
+
+//   function startDetection() {
+//     const canvas = faceapi.createCanvasFromMedia(video);
+//     document.body.appendChild(canvas);
+//     faceapi.matchDimensions(canvas, video);
+
+//     const detectionLoop = async () => {
+//       if (!isDetecting) return;
+
+//       try {
+//         const detections = await faceapi.detectAllFaces(video, faceDetector)
+//           .withFaceLandmarks()
+//           .withFaceDescriptors();
+
+//         canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+//         const resized = faceapi.resizeResults(detections, video);
+        
+//         // Draw detection visuals
+//         faceapi.draw.drawDetections(canvas, resized);
+//         faceapi.draw.drawFaceLandmarks(canvas, resized);
+
+//         // Handle detection results
+//         if (resized.length === 0) {
+//           handleDetectionEvent('no_face_detected');
+//         } else if (resized.length > 1) {
+//           handleDetectionEvent('multiple_faces_detected');
+//         } else {
+//           updateStatus('Face detected ✅', 'success');
+//         }
+//       } catch (error) {
+//         console.error('Detection error:', error);
+//       }
+      
+//       setTimeout(detectionLoop, DETECT_INTERVAL);
+//     };
+
+//     detectionLoop();
+//   }
+
+//   // ***********************
+//   // Event Handling
+//   // ***********************
+
+//   function handleDetectionEvent(reason) {
+//     const event = {
+//       reason,
+//       timestamp: new Date().toISOString()
+//     };
+//     bufferEvent(event);
+//     showAlert(reason);
+//     updateStatus(reason.replace(/_/g, ' ') + ' ⚠️', 'warning');
+//   }
+
+//   const eventBuffer = [];
+//   function bufferEvent(event) {
+//     eventBuffer.push(event);
+//     if (eventBuffer.length >= 5) flushEvents();
+//   }
+
+//   async function flushEvents() {
+//     if (eventBuffer.length === 0) return;
+    
+//     try {
+//       const response = await fetch('/api/proctor/events', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ events: eventBuffer.splice(0) })
+//       });
+      
+//       if (!response.ok) throw new Error('Flush failed');
+//     } catch (error) {
+//       console.error('Event flush error:', error);
+//     }
+//   }
+
+//   // ***********************
+//   // UI Helpers
+//   // ***********************
+
+//   function updateStatus(text, type = 'info') {
+//     if (!statusElement) return;
+//     statusElement.innerHTML = `
+//       <div class="status-${type}">
+//         ${text}
+//       </div>
+//     `;
+//   }
+
+//   function showAlert(message) {
+//     const alert = document.createElement('div');
+//     alert.className = 'proctor-alert';
+//     alert.innerHTML = `
+//       <div class="alert-content">
+//         ⚠️ ${message.replace(/_/g, ' ')}
+//       </div>
+//     `;
+//     document.body.appendChild(alert);
+//     setTimeout(() => alert.remove(), 5000);
+//   }
+
+//   // ***********************
+//   // Main Initialization
+//   // ***********************
+
+//   async function initializeProctoring() {
+//     try {
+//       // Load core components
+//       if (!await initializeModels()) return;
+//       if (!await initializeWebcam()) return;
+
+//       // Start detection system
+//       isDetecting = true;
+//       startDetection();
+//       setInterval(flushEvents, FLUSH_INTERVAL);
+
+//       // Setup event listeners
+//       document.addEventListener('visibilitychange', () => 
+//         handleDetectionEvent(document.hidden ? 'tab_hidden' : 'tab_visible')
+//       );
+//       window.addEventListener('blur', () => handleDetectionEvent('window_blur'));
+      
+//       // Cleanup loading screen
+//       document.getElementById('loading')?.remove();
+
+//     } catch (error) {
+//       console.error('Initialization failed:', error);
+//       showAlert('System startup error!');
+//     }
+//   }
+
+//   // Start proctoring system
+//   initializeProctoring();
+// })();

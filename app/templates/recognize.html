@@ -1,16 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Proctoring</title>
-  <script defer src="/static/js/face-api.min.js"></script>
-  <script defer src="/static/js/proctor.js"></script>
-  <style>
-    #warning { color: red; font-weight: bold; }
-  </style>
-</head>
-<body>
-  <video id="video" width="720" height="560" autoplay muted></video>
-  <canvas id="overlay"></canvas>
-  <div id="warning"></div>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Proctoring Test{% endblock %}
+
+{% block content %}
+  <div id="verification-status" class="status-info">
+    Initializing Face Verification...
+  </div>
+
+  <div id="loading" class="loading-screen">
+    <div class="loader"></div>
+    <p>Loading Face Verification System...</p>
+  </div>
+
+  <video id="video" autoplay muted playsinline></video>
+{% endblock %}
+
+{% block scripts %}
+  <script defer src="{{ url_for('static', path='js/face-api.min.js') }}"></script>
+  <script defer src="{{ url_for('static', path='js/proctor.js') }}"></script>
+{% endblock %}

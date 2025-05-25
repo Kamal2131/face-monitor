@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Proctoring Dashboard</title>
-</head>
-<body>
-  <h1>Proctoring System</h1>
-  <button type="submit"></button>
-  <video id="video" width="200" height="400" autoplay muted></video>
-
-  <!--script defer src="/static/js/face-api.min.js"></script !-->
-  <!-- script defer src="/static/js/proctor.js"></script !-- >
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+  <h2>Welcome, {{ user }}</h2>
+  <a href="/recognize">Start Exam</a>
+{% endblock %}
