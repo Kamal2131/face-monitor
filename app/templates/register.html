@@ -1,21 +1,76 @@
-{% extends "base.html" %} {% block title %}Register{% endblock %} {% block
-content %}
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
 <h1>Register</h1>
+
 {% if msg %}
 <div class="alert alert-error">{{ msg }}</div>
-{% endif %} {% if msg %}
-<p class="error">{{ msg }}</p>
 {% endif %}
-<form method="post" enctype="multipart/form-data">
+
+<form id="registerForm" method="post" enctype="multipart/form-data">
   <input name="name" placeholder="Name" required /><br />
-  <input
-    type="password"
-    name="password"
-    placeholder="Password"
-    required
-  /><br />
-  <input type="file" name="face_image" accept="image/*" required /><br />
-  <button>Sign Up</button>
+  <input type="password" name="password" placeholder="Password" required /><br />
+
+  <!-- Camera preview and capture -->
+  <video id="video" width="320" height="240" autoplay></video><br />
+  <button type="button" onclick="capture()">Capture</button><br />
+  <canvas id="canvas" width="320" height="240" style="display: none;"></canvas><br />
+  <input type="hidden" name="face_image_data" id="face_image_data" />
+
+  <button type="submit">Sign Up</button>
 </form>
+
 <p>Have account? <a href="/login">Login</a></p>
+
+<script>
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const faceImageData = document.getElementById('face_image_data');
+
+  // Access the webcam
+  navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+    video.srcObject = stream;
+  });
+
+  // Capture image and convert to base64
+  function capture() {
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL('image/jpeg');
+    faceImageData.value = dataUrl;
+    alert("Photo captured successfully!");
+  }
+
+  // Convert form to multipart and send image blob
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const base64Data = form.face_image_data.value;
+    if (!base64Data) {
+      alert("Please capture an image first.");
+      return;
+    }
+
+    // Convert base64 to Blob
+    const res = await fetch(base64Data);
+    const blob = await res.blob();
+    formData.append("face_image", blob, "face.jpg");
+
+    // Send with fetch to preserve file input
+    fetch("/register", {
+      method: "POST",
+      body: formData
+    }).then(res => {
+      if (res.redirected) {
+        window.location.href = res.url;
+      } else {
+        res.text().then(html => document.body.innerHTML = html);
+      }
+    });
+  });
+</script>
 {% endblock %}
+
