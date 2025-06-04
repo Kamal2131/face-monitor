@@ -2,4 +2,25 @@ users.db
 warnings.log
 current_user.txt
 run.bat
+app/static/uploads
 
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Docker
+**/build/
+**/*.log
+
+# IDE-specific
+.vscode/
+.idea/
+
+# Mac OS
+.DS_Store

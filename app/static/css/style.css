@@ -127,3 +127,74 @@ canvas {
 .container a[href="/recognize"]:hover {
   background-color: #4cd137;
 }
+
+:root {
+  --bg: #2c3e50;
+  --bulb-on: #f1c40f;
+  --bulb-off: #bdc3c7;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.light-toggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  z-index: 999;
+}
+
+.bulb {
+  position: relative;
+  width: 60px;
+  height: 100px;
+}
+
+.bulb-top {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--bulb-off);
+  transition: background 0.3s;
+}
+
+.bulb-bottom {
+  width: 20px;
+  height: 20px;
+  background: #7f8c8d;
+  margin: auto;
+  margin-top: -10px;
+}
+
+.bulb-wire {
+  width: 4px;
+  height: 50px;
+  background: #ecf0f1;
+  margin: auto;
+}
+
+.bulb-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--bulb-on);
+  opacity: 0;
+  box-shadow: 0 0 20px var(--bulb-on);
+  transition: opacity 0.3s;
+}
+
+body.light-on .bulb-top {
+  background: var(--bulb-on);
+}
+body.light-on .bulb-glow {
+  opacity: 1;
+}

@@ -1,38 +1,62 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
+
 {% block content %}
-<h1>Register</h1>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px;">
+    <h2 class="text-center mb-4">Register</h2>
 
-{% if msg %}
-<div class="alert alert-error">{{ msg }}</div>
-{% endif %}
+    {% if msg %}
+      <div class="alert alert-danger text-center">{{ msg }}</div>
+    {% endif %}
 
-<form id="registerForm" method="post" enctype="multipart/form-data">
-  <input name="name" placeholder="Name" required /><br />
-  <input type="password" name="password" placeholder="Password" required /><br />
+    <form id="registerForm" method="post" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="name" class="form-label">Username</label>
+        <input name="name" id="name" type="text" class="form-control" placeholder="Enter name" required />
+      </div>
 
-  <!-- Camera preview and capture -->
-  <video id="video" width="320" height="240" autoplay></video><br />
-  <button type="button" onclick="capture()">Capture</button><br />
-  <canvas id="canvas" width="320" height="240" style="display: none;"></canvas><br />
-  <input type="hidden" name="face_image_data" id="face_image_data" />
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input name="password" id="password" type="password" class="form-control" placeholder="Enter password" required />
+      </div>
 
-  <button type="submit">Sign Up</button>
-</form>
+      <div class="mb-3 text-center">
+        <label class="form-label d-block">Capture Your Face</label>
+        <video id="video" width="320" height="240" autoplay class="border rounded shadow-sm mb-2"></video><br>
+        <button type="button" class="btn btn-outline-primary" onclick="capture()">📸 Capture</button><br>
+        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+        <input type="hidden" name="face_image_data" id="face_image_data" />
+      </div>
 
-<p>Have account? <a href="/login">Login</a></p>
+      <div class="d-grid mt-3">
+        <button type="submit" class="btn btn-success">Sign Up</button>
+      </div>
+    </form>
 
+    <div class="text-center mt-3">
+      <p>Already have an account? <a href="/login">Login here</a></p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
 <script>
   const video = document.getElementById('video');
   const canvas = document.getElementById('canvas');
   const faceImageData = document.getElementById('face_image_data');
 
-  // Access the webcam
-  navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-    video.srcObject = stream;
-  });
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+      video.srcObject = stream;
+    })
+    .catch(err => {
+      alert("Camera access denied or not available.");
+      console.error(err);
+    });
 
-  // Capture image and convert to base64
   function capture() {
     const context = canvas.getContext('2d');
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -41,10 +65,8 @@
     alert("Photo captured successfully!");
   }
 
-  // Convert form to multipart and send image blob
   document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-
     const form = e.target;
     const formData = new FormData(form);
 
@@ -54,12 +76,10 @@
       return;
     }
 
-    // Convert base64 to Blob
     const res = await fetch(base64Data);
     const blob = await res.blob();
     formData.append("face_image", blob, "face.jpg");
 
-    // Send with fetch to preserve file input
     fetch("/register", {
       method: "POST",
       body: formData
@@ -73,4 +93,3 @@
   });
 </script>
 {% endblock %}
-
