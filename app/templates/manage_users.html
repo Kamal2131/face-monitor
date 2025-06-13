@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Manage Users</h2>
+    {% if msg %}
+        <div class="alert alert-info">{{ msg }}</div>
+    {% endif %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th><th>Username</th><th>Role</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.role }}</td>
+                <td>
+                    {% if user.role != "admin" %}
+                        <form method="post" action="/admin/users/promote/{{ user.id }}" style="display:inline;">
+                            <button class="btn btn-sm btn-warning">Promote to Admin</button>
+                        </form>
+                    {% endif %}
+                    <form method="post" action="/admin/users/delete/{{ user.id }}" style="display:inline;">
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/admin/dashboard" class="btn btn-secondary">⬅ Back</a>
+</div>
+{% endblock %}

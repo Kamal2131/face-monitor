@@ -1,263 +1,38 @@
-import os, shutil
-from datetime import datetime
-from fastapi import (
-    FastAPI, Request, Form, Depends, File, UploadFile, status
-)
-from fastapi.responses import RedirectResponse, HTMLResponse, JSONResponse
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlalchemy.orm import Session
-from . import database, models, auth
-from .database import engine, Base, SessionLocal
-from pydantic import BaseModel
-from typing import List
-from fastapi.exceptions import HTTPException
-from fastapi.middleware import Middleware
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi import HTTPException
-from PIL import Image
-import io
-import re
+from app.routes import auth_routes, dashboard_routes, proctor_routes, admin
+from app.database import Base, engine
+from app.middleware import auth_middleware
+from fastapi.responses import RedirectResponse
 
-# Create DB tables
+
+# Initialize DB tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+# Mount static files and templates
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
+# Add middleware
+app.middleware("http")(auth_middleware)
 
+# Include routers
+app.include_router(auth_routes.router)
+app.include_router(dashboard_routes.router)
+app.include_router(proctor_routes.router)
+app.include_router(admin.router)
 
-class ProctorEventIn(BaseModel):
-    reason: str
-    timestamp: str
+from fastapi.responses import RedirectResponse
 
-class ProctorBatch(BaseModel):
-    events: List[ProctorEventIn]
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-        
-def sanitize_filename(name: str) -> str:
-    """Sanitize filename to prevent path traversal"""
-    return re.sub(r'[^a-zA-Z0-9_]', '', name)
-
-
-# ----- Auth Placeholder -----
-def get_current_user(request: Request):
-    user = request.cookies.get("user")
-    if not user:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    return user
-
-# Add middleware for auth checks
-@app.middleware("http")
-async def auth_middleware(request: Request, call_next):
-    if request.url.path.startswith(("/recognize", "/dashboard", "/api")):
-        try:
-            user = get_current_user(request)
-        except HTTPException:
-            return RedirectResponse("/login")
-    return await call_next(request)
-
-# Add the missing current-user endpoint
-@app.get("/api/current-user")
-async def get_current_user_endpoint(user: str = Depends(get_current_user)):
-    return {"name": user}
-
-
-# ----- Routes -----
 @app.get("/", include_in_schema=False)
-async def root():
+def root():
     return RedirectResponse("/login")
 
-@app.get("/register")
-def register_get(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
-
-@app.post("/register")
-async def register_post(
-    request: Request,
-    name: str = Form(...),
-    password: str = Form(...),
-    face_image: UploadFile = File(...),
-    db: Session = Depends(get_db)
-):
-    MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
-    ALLOWED_MIME_TYPES = {"image/jpeg", "image/png"}
-
-    try:
-        # Validate username availability
-        if db.query(models.User).filter_by(name=name).first():
-            return templates.TemplateResponse(
-                "register.html",
-                {"request": request, "msg": "Username already exists"}
-            )
-
-        # Validate file size
-        if face_image.size > MAX_FILE_SIZE:
-            return templates.TemplateResponse(
-                "register.html",
-                {"request": request, "msg": "File too large (max 5MB)"}
-            )
-
-        # Validate MIME type
-        if face_image.content_type not in ALLOWED_MIME_TYPES:
-            return templates.TemplateResponse(
-                "register.html",
-                {"request": request, "msg": "Only JPEG/PNG images allowed"}
-            )
-
-        # Read and verify image contents
-        contents = await face_image.read()
-        try:
-            Image.open(io.BytesIO(contents)).verify()
-        except Exception as e:
-            return templates.TemplateResponse(
-                "register.html",
-                {"request": request, "msg": f"Invalid image file: {str(e)}"}
-            )
-
-        # Sanitize filename
-        safe_name = sanitize_filename(name)
-        if not safe_name:
-            return templates.TemplateResponse(
-                "register.html",
-                {"request": request, "msg": "Invalid username format"}
-            )
-
-        # Create upload directory
-        upload_dir = "app/static/uploads"
-        os.makedirs(upload_dir, exist_ok=True)
-        file_path = os.path.join(upload_dir, f"{safe_name}.jpg")
-
-        # Save file
-        try:
-            with open(file_path, "wb") as buffer:
-                buffer.write(contents)
-        except IOError as e:
-            return templates.TemplateResponse(
-                "register.html",
-                {"request": request, "msg": f"File save failed: {str(e)}"}
-            )
-
-        # Create user
-        try:
-            hashed = auth.hash_password(password)
-            user = models.User(name=safe_name, password_hash=hashed)
-            db.add(user)
-            db.commit()
-        except Exception as e:
-            db.rollback()
-            # Clean up uploaded file if DB fails
-            if os.path.exists(file_path):
-                os.remove(file_path)
-            return templates.TemplateResponse(
-                "register.html",
-                {"request": request, "msg": f"Registration failed: {str(e)}"}
-            )
-
-        # Automatically log in user
-        response = RedirectResponse(
-            url="/dashboard",
-            status_code=status.HTTP_303_SEE_OTHER
-        )
-        response.set_cookie(
-            key="user",
-            value=safe_name,
-            httponly=True,
-            samesite="Lax",
-            max_age=3600
-        )
-        return response
-
-    except Exception as e:
-        return templates.TemplateResponse(
-            "register.html",
-            {"request": request, "msg": f"Unexpected error: {str(e)}"}
-        )
-
-@app.get("/login")
-def login_get(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
-
-# Update the login response to set secure cookies
-@app.post("/login")
-def login_post(
-    request: Request,
-    name: str = Form(...),
-    password: str = Form(...),
-    db: Session = Depends(get_db)
-):
-    user = db.query(models.User).filter_by(name=name).first()
-    if not user or not auth.verify_password(password, user.password_hash):
-        return templates.TemplateResponse("login.html", {"request": request, "msg": "Invalid"})
-    response = RedirectResponse("/dashboard", status_code=status.HTTP_303_SEE_OTHER)
-    response.set_cookie(
-        key="user",
-        value=name,
-        httponly=True,
-        samesite="Lax"
-    )
+@app.get("/logout")
+def logout(request: Request):
+    response = templates.TemplateResponse("logout.html", {"request": request})
+    response.delete_cookie("user")
     return response
-
-
-@app.get("/dashboard")
-async def dashboard(request: Request, user=Depends(get_current_user)):
-    if not user:
-        return RedirectResponse("/login")
-    return templates.TemplateResponse("dashboard.html", {"request": request, "user": user})
-
-@app.get("/recognize")
-async def recognize(request: Request, user=Depends(get_current_user)):
-    if not user:
-        return RedirectResponse("/login")
-    return templates.TemplateResponse("recognize.html", {"request": request, "user": user})
-
-@app.post("/api/proctor/events")
-async def proctor_events(
-    batch: ProctorBatch,
-    user: str = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    # Log raw payload for debugging
-    print("Received batch:", batch.json())
-    saved = 0
-
-    for evt in batch.events:
-        ts_str = evt.timestamp
-        # Normalize trailing 'Z' to '+00:00' for fromisoformat
-        if ts_str.endswith("Z"):
-            ts_str = ts_str[:-1] + "+00:00"
-        try:
-            ts = datetime.fromisoformat(ts_str)
-        except Exception as e:
-            print(f"Timestamp parsing error for '{evt.timestamp}':", e)
-            return JSONResponse(
-                status_code=400,
-                content={"error": f"Invalid timestamp '{evt.timestamp}'"}
-            )
-
-        # Save the event
-        pe = models.ProctorEvent(
-            user_id= user,   # replace with real user later
-            reason=evt.reason,
-            timestamp=ts
-        )
-        db.add(pe)
-        saved += 1
-
-    try:
-        db.commit()
-    except Exception as e:
-        print("DB commit error:", e)
-        return JSONResponse(
-            status_code=500,
-            content={"error": "Database error"}
-        )
-
-    return {"status": "ok", "saved": saved}
