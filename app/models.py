@@ -7,6 +7,7 @@ class User(Base):
     name          = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=False)
     role          = Column(String, default="student", nullable=False)  # Add this line ✅
+    image_url     = Column(String)
 
 class ProctorEvent(Base):
     __tablename__ = 'proctor_events'

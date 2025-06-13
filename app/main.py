@@ -6,10 +6,8 @@ from app.database import Base, engine
 from app.middleware import auth_middleware
 from fastapi.responses import RedirectResponse
 
-
 # Initialize DB tables
 Base.metadata.create_all(bind=engine)
-
 app = FastAPI()
 
 # Mount static files and templates
@@ -24,8 +22,6 @@ app.include_router(auth_routes.router)
 app.include_router(dashboard_routes.router)
 app.include_router(proctor_routes.router)
 app.include_router(admin.router)
-
-from fastapi.responses import RedirectResponse
 
 @app.get("/", include_in_schema=False)
 def root():
