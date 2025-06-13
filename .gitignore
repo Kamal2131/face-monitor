@@ -24,3 +24,7 @@ env/
 
 # Mac OS
 .DS_Store
+
+.env
+
+users.db-journal
