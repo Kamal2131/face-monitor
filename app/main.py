@@ -32,3 +32,6 @@ def logout(request: Request):
     response = templates.TemplateResponse("logout.html", {"request": request})
     response.delete_cookie("user")
     return response
+
+from fastapi import APIRouter, Request
+from fastapi.templating import Jinja2Templates

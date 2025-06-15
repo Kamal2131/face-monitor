@@ -12,7 +12,9 @@ templates = Jinja2Templates(directory="app/templates")
 # Middleware-like function to check if the user is admin
 def require_admin(user: User):
     if (user.role != "admin"): # type: ignore
+        # return templates.TemplateResponse("admin_dashboard.html", {"request": request, "user": user.name})
         raise HTTPException(status_code=403, detail="Admins only")
+    
 
 
 @router.get("/dashboard")

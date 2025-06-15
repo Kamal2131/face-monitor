@@ -1,13 +1,20 @@
 {% extends "base.html" %}
+
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Welcome, Admin {{ user }}</h2>
-    <div class="mt-4">
-        <a href="/admin/questions/add" class="btn btn-primary mb-2">➕ Add Question</a>
-        <a href="/admin/users" class="btn btn-secondary mb-2">👥 Manage Users</a>
-        <a href="/logout" class="btn btn-danger mb-2">🔒 Logout</a>
+  <h2 class="mb-4">Welcome, Admin {{ user }}</h2>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <a href="/admin/questions/add" class="btn btn-outline-light w-100">Add Question</a>
     </div>
+    <div class="col-md-4">
+      <a href="/admin/users" class="btn btn-outline-light w-100">Manage Users</a>
+    </div>
+    <div class="col-md-4">
+      <a href="/dashboard" class="btn btn-outline-light w-100">Back to Student Dashboard</a>
+    </div>
+  </div>
 </div>
 {% endblock %}

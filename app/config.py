@@ -1,24 +1,23 @@
-# app/config.py
+# config.py
+import os
+from dotenv import load_dotenv
+from pydantic import BaseSettings
 
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from fastapi.middleware.cors import CORSMiddleware
+load_dotenv()
 
-# Initialize the FastAPI app
-app = FastAPI()
+class Settings(BaseSettings):
+    ENV: str = os.getenv("ENV", "production")
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "fallback-secret-key")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./proctor.db")
+    MAX_UPLOAD_SIZE: int = 5 * 1024 * 1024  # 5MB
+    ALLOWED_MIME_TYPES: list = ["image/jpeg", "image/png"]
+    CLOUDINARY_CLOUD_NAME: str = os.getenv("CLOUDINARY_CLOUD_NAME", "")
+    CLOUDINARY_API_KEY: str = os.getenv("CLOUDINARY_API_KEY", "")
+    CLOUDINARY_API_SECRET: str = os.getenv("CLOUDINARY_API_SECRET", "")
+    CLOUDINARY_FOLDER: str = os.getenv("CLOUDINARY_FOLDER", "proctor-system")
+    CORS_ORIGINS: list = os.getenv("CORS_ORIGINS", "").split(",") or ["*"]
+    
+    class Config:
+        case_sensitive = True
 
-# Mount static files (e.g., CSS, JS, uploads)
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
-
-# Template engine using Jinja2
-templates = Jinja2Templates(directory="app/templates")
-
-# Optional: Add CORS middleware (adjust as needed)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # For dev only. Restrict in production!
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+settings = Settings() 

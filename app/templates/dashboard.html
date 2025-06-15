@@ -1,6 +1,32 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Student Dashboard{% endblock %}
+
 {% block content %}
-  <h2>Welcome, {{ user.name }}</h2>
-  <a href="/recognize">Start Exam</a>
+<div class="dashboard-container" style="max-width: 800px; margin: auto; padding: 2rem; font-family: Arial, sans-serif;">
+  <h2 style="color: #2c3e50;">Welcome, {{ user.name }}</h2>
+
+  <div class="card" style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin-top: 1rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+    <h3 style="margin-bottom: 1rem;">Your Profile</h3>
+    <ul style="list-style: none; padding-left: 0;">
+      <li><strong>Name:</strong> {{ user.name }}</li>
+      <li><strong>Email:</strong> {{ user.email }}</li>
+      <li><strong>Student ID:</strong> {{ user.student_id }}</li>
+    </ul>
+  </div>
+
+  <div class="exam-section" style="margin-top: 2rem;">
+    <a href="/recognize" style="background-color: #3498db; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+      🎓 Start Exam
+    </a>
+  </div>
+
+  <div class="upcoming-section" style="margin-top: 2.5rem;">
+    <h3>Upcoming Features</h3>
+    <ul style="padding-left: 1.2rem;">
+      <li>Exam History</li>
+      <li>Notifications</li>
+      <li>Profile Editing</li>
+    </ul>
+  </div>
+</div>
 {% endblock %}
