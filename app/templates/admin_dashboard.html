@@ -1,20 +1,417 @@
 {% extends "base.html" %}
-
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2 class="mb-4">Welcome, Admin {{ user }}</h2>
-  <div class="row g-4">
-    <div class="col-md-4">
-      <a href="/admin/questions/add" class="btn btn-outline-light w-100">Add Question</a>
-    </div>
-    <div class="col-md-4">
-      <a href="/admin/users" class="btn btn-outline-light w-100">Manage Users</a>
-    </div>
-    <div class="col-md-4">
-      <a href="/dashboard" class="btn btn-outline-light w-100">Back to Student Dashboard</a>
+<div class="admin-dashboard animate-fade">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <!-- Dashboard Header -->
+      <div class="d-flex align-items-center mb-5">
+        <div class="admin-avatar me-4">
+          <div class="avatar-circle bg-admin">
+            <i class="fas fa-user-shield"></i>
+          </div>
+        </div>
+        <div>
+          <h1 class="mb-1">Admin Dashboard</h1>
+          <p class="text-muted">Welcome back, {{ user }}</p>
+        </div>
+      </div>
+      
+      <!-- Stats Overview -->
+      <div class="row mb-5">
+        <div class="col-md-3 mb-4">
+          <div class="card stat-card">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="stat-icon bg-primary">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="ms-3">
+                  <h3 class="mb-0">142</h3>
+                  <p class="text-muted mb-0">Total Users</p>
+                </div>
+              </div>
+              <div class="stat-progress mt-3">
+                <div class="progress" style="height: 6px;">
+                  <div class="progress-bar" role="progressbar" style="width: 75%;"></div>
+                </div>
+                <small>+12% since last week</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+          <div class="card stat-card">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="stat-icon bg-success">
+                  <i class="fas fa-question-circle"></i>
+                </div>
+                <div class="ms-3">
+                  <h3 class="mb-0">387</h3>
+                  <p class="text-muted mb-0">Questions</p>
+                </div>
+              </div>
+              <div class="stat-progress mt-3">
+                <div class="progress" style="height: 6px;">
+                  <div class="progress-bar bg-success" role="progressbar" style="width: 65%;"></div>
+                </div>
+                <small>+8% since last week</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+          <div class="card stat-card">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="stat-icon bg-warning">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="ms-3">
+                  <h3 class="mb-0">94%</h3>
+                  <p class="text-muted mb-0">System Health</p>
+                </div>
+              </div>
+              <div class="stat-progress mt-3">
+                <div class="progress" style="height: 6px;">
+                  <div class="progress-bar bg-warning" role="progressbar" style="width: 94%;"></div>
+                </div>
+                <small>Optimal performance</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+          <div class="card stat-card">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="stat-icon bg-info">
+                  <i class="fas fa-history"></i>
+                </div>
+                <div class="ms-3">
+                  <h3 class="mb-0">24</h3>
+                  <p class="text-muted mb-0">Pending Actions</p>
+                </div>
+              </div>
+              <div class="stat-progress mt-3">
+                <div class="progress" style="height: 6px;">
+                  <div class="progress-bar bg-info" role="progressbar" style="width: 40%;"></div>
+                </div>
+                <small>8 high priority</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Quick Actions -->
+      <div class="card mb-5">
+        <div class="card-header">
+          <h3 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h3>
+        </div>
+        <div class="card-body">
+          <div class="row g-4">
+            <div class="col-md-4">
+              <a href="/admin/questions/add" class="action-card bg-purple">
+                <div class="action-icon">
+                  <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="action-content">
+                  <h5>Add Question</h5>
+                  <p>Create new exam questions</p>
+                </div>
+              </a>
+            </div>
+            
+            <div class="col-md-4">
+              <a href="/admin/users" class="action-card bg-teal">
+                <div class="action-icon">
+                  <i class="fas fa-user-cog"></i>
+                </div>
+                <div class="action-content">
+                  <h5>Manage Users</h5>
+                  <p>View and edit user accounts</p>
+                </div>
+              </a>
+            </div>
+            
+            <div class="col-md-4">
+              <a href="/dashboard" class="action-card bg-orange">
+                <div class="action-icon">
+                  <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="action-content">
+                  <h5>Student Dashboard</h5>
+                  <p>Switch to student view</p>
+                </div>
+              </a>
+            </div>
+            
+            <div class="col-md-4">
+              <a href="#" class="action-card bg-indigo">
+                <div class="action-icon">
+                  <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="action-content">
+                  <h5>Exam Reports</h5>
+                  <p>View exam analytics</p>
+                </div>
+              </a>
+            </div>
+            
+            <div class="col-md-4">
+              <a href="#" class="action-card bg-pink">
+                <div class="action-icon">
+                  <i class="fas fa-cogs"></i>
+                </div>
+                <div class="action-content">
+                  <h5>System Settings</h5>
+                  <p>Configure portal settings</p>
+                </div>
+              </a>
+            </div>
+            
+            <div class="col-md-4">
+              <a href="#" class="action-card bg-cyan">
+                <div class="action-icon">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="action-content">
+                  <h5>Security</h5>
+                  <p>Manage access controls</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Recent Activity -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="mb-0"><i class="fas fa-history me-2"></i>Recent Activity</h3>
+        </div>
+        <div class="card-body">
+          <div class="activity-timeline">
+            <div class="activity-item">
+              <div class="activity-icon bg-success">
+                <i class="fas fa-user-plus"></i>
+              </div>
+              <div class="activity-content">
+                <h6>New user registered</h6>
+                <p class="text-muted mb-0">John Doe (johndoe@example.com) signed up</p>
+                <small>10 minutes ago</small>
+              </div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-icon bg-primary">
+                <i class="fas fa-question-circle"></i>
+              </div>
+              <div class="activity-content">
+                <h6>Question added</h6>
+                <p class="text-muted mb-0">New question added to Calculus exam</p>
+                <small>1 hour ago</small>
+              </div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-icon bg-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="activity-content">
+                <h6>Security alert</h6>
+                <p class="text-muted mb-0">Unusual login activity detected</p>
+                <small>3 hours ago</small>
+              </div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-icon bg-info">
+                <i class="fas fa-sync-alt"></i>
+              </div>
+              <div class="activity-content">
+                <h6>System update</h6>
+                <p class="text-muted mb-0">Portal updated to version 2.3.1</p>
+                <small>Yesterday, 14:30</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+<style>
+  /* Admin Dashboard Specific Styles */
+  .admin-dashboard {
+    padding: 2rem 0;
+  }
+  
+  .admin-avatar .avatar-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  }
+  
+  .bg-admin {
+    background: linear-gradient(135deg, #8E2DE2, #4A00E0);
+  }
+  
+  .stat-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+  
+  .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+  }
+  
+  .action-card {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    height: 100%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  
+  .action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-decoration: none;
+    color: white;
+  }
+  
+  .action-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-right: 1.5rem;
+    background: rgba(255,255,255,0.2);
+  }
+  
+  .action-content h5 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .action-content p {
+    margin-bottom: 0;
+    opacity: 0.8;
+    font-size: 0.9rem;
+  }
+  
+  .bg-purple { background: linear-gradient(135deg, #8E2DE2, #4A00E0); }
+  .bg-teal { background: linear-gradient(135deg, #11998e, #38ef7d); }
+  .bg-orange { background: linear-gradient(135deg, #FF512F, #F09819); }
+  .bg-indigo { background: linear-gradient(135deg, #4b6cb7, #182848); }
+  .bg-pink { background: linear-gradient(135deg, #F857A6, #FF5858); }
+  .bg-cyan { background: linear-gradient(135deg, #00d2ff, #3a7bd5); }
+  
+  .activity-timeline {
+    position: relative;
+    padding-left: 30px;
+  }
+  
+  .activity-timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255,255,255,0.1);
+  }
+  
+  .activity-item {
+    position: relative;
+    padding: 1.5rem 0 1.5rem 2.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  .activity-item:last-child {
+    border-bottom: none;
+  }
+  
+  .activity-icon {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: white;
+    z-index: 2;
+  }
+  
+  .activity-content h6 {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  .activity-content small {
+    display: block;
+    margin-top: 0.5rem;
+    opacity: 0.7;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Set active nav link
+    document.querySelectorAll('.nav-link').forEach(link => {
+      if(link.textContent.includes('Admin Dashboard')) {
+        link.classList.add('active');
+      }
+    });
+    
+    // Add animation to stats cards
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach((card, index) => {
+      setTimeout(() => {
+        card.style.opacity = 1;
+        card.style.transform = 'translateY(0)';
+      }, 200 * index);
+    });
+  });
+</script>
 {% endblock %}

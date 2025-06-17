@@ -2,31 +2,326 @@
 {% block title %}Student Dashboard{% endblock %}
 
 {% block content %}
-<div class="dashboard-container" style="max-width: 800px; margin: auto; padding: 2rem; font-family: Arial, sans-serif;">
-  <h2 style="color: #2c3e50;">Welcome, {{ user.name }}</h2>
-
-  <div class="card" style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin-top: 1rem; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-    <h3 style="margin-bottom: 1rem;">Your Profile</h3>
-    <ul style="list-style: none; padding-left: 0;">
-      <li><strong>Name:</strong> {{ user.name }}</li>
-      <li><strong>Email:</strong> {{ user.email }}</li>
-      <li><strong>Student ID:</strong> {{ user.student_id }}</li>
-    </ul>
-  </div>
-
-  <div class="exam-section" style="margin-top: 2rem;">
-    <a href="/recognize" style="background-color: #3498db; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
-      🎓 Start Exam
-    </a>
-  </div>
-
-  <div class="upcoming-section" style="margin-top: 2.5rem;">
-    <h3>Upcoming Features</h3>
-    <ul style="padding-left: 1.2rem;">
-      <li>Exam History</li>
-      <li>Notifications</li>
-      <li>Profile Editing</li>
-    </ul>
+<div class="dashboard-container animate-fade">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <!-- Welcome Header -->
+      <div class="d-flex align-items-center mb-5">
+        <div class="avatar me-4">
+          <div class="avatar-circle bg-primary">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+        </div>
+        <div>
+          <h1 class="mb-1">Welcome back, {{ user.name }}</h1>
+          <p class="text-muted">Student ID: {{ user.student_id }}</p>
+        </div>
+      </div>
+      
+      <!-- Stats Cards -->
+      <div class="row mb-5">
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="icon-circle bg-success me-3">
+                  <i class="fas fa-book"></i>
+                </div>
+                <div>
+                  <h5 class="mb-0">4</h5>
+                  <p class="text-muted mb-0">Active Courses</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="icon-circle bg-info me-3">
+                  <i class="fas fa-calendar-check"></i>
+                </div>
+                <div>
+                  <h5 class="mb-0">2</h5>
+                  <p class="text-muted mb-0">Upcoming Exams</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="icon-circle bg-warning me-3">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                  <h5 class="mb-0">86%</h5>
+                  <p class="text-muted mb-0">Average Score</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Profile Card -->
+      <div class="card mb-5">
+        <div class="card-header">
+          <h3 class="mb-0"><i class="fas fa-user-circle me-2"></i>Your Profile</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <div class="profile-field">
+                <label>Full Name</label>
+                <p>{{ user.name }}</p>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="profile-field">
+                <label>Email Address</label>
+                <p>{{ user.email }}</p>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="profile-field">
+                <label>Student ID</label>
+                <p>{{ user.student_id }}</p>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="profile-field">
+                <label>Program</label>
+                <p>Computer Science</p>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="profile-field">
+                <label>Enrollment Status</label>
+                <p><span class="badge bg-success">Active</span></p>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="profile-field">
+                <label>Last Login</label>
+                <p>Today, 14:32</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Action Section -->
+      <div class="card mb-5">
+        <div class="card-header">
+          <h3 class="mb-0"><i class="fas fa-rocket me-2"></i>Quick Actions</h3>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-3">
+            <a href="/recognize" class="btn btn-primary btn-lg d-flex align-items-center justify-content-center py-3">
+              <i class="fas fa-graduation-cap me-3 fa-2x"></i>
+              <div class="text-start">
+                <h4 class="mb-1">Start Exam</h4>
+                <p class="mb-0">Begin your scheduled exams</p>
+              </div>
+              <i class="fas fa-arrow-right ms-auto"></i>
+            </a>
+            
+            <a href="#" class="btn btn-secondary btn-lg d-flex align-items-center justify-content-center py-3">
+              <i class="fas fa-book-open me-3 fa-2x"></i>
+              <div class="text-start">
+                <h4 class="mb-1">View Course Materials</h4>
+                <p class="mb-0">Access lectures, notes, and resources</p>
+              </div>
+              <i class="fas fa-arrow-right ms-auto"></i>
+            </a>
+            
+            <a href="#" class="btn btn-info btn-lg d-flex align-items-center justify-content-center py-3">
+              <i class="fas fa-chart-bar me-3 fa-2x"></i>
+              <div class="text-start">
+                <h4 class="mb-1">Check Grades</h4>
+                <p class="mb-0">View your exam results and progress</p>
+              </div>
+              <i class="fas fa-arrow-right ms-auto"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Upcoming Features -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="mb-0"><i class="fas fa-road me-2"></i>Coming Soon</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 mb-4">
+              <div class="feature-card">
+                <div class="feature-icon bg-purple">
+                  <i class="fas fa-history"></i>
+                </div>
+                <h5>Exam History</h5>
+                <p>Detailed records of all your past exams and results</p>
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="feature-card">
+                <div class="feature-icon bg-orange">
+                  <i class="fas fa-bell"></i>
+                </div>
+                <h5>Notifications</h5>
+                <p>Real-time alerts for exams, deadlines and updates</p>
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <div class="feature-card">
+                <div class="feature-icon bg-teal">
+                  <i class="fas fa-user-edit"></i>
+                </div>
+                <h5>Profile Editing</h5>
+                <p>Update your personal information and preferences</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<style>
+  /* Dashboard Specific Styles */
+  .dashboard-container {
+    padding: 2rem 0;
+  }
+  
+  .avatar {
+    position: relative;
+  }
+  
+  .avatar-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .icon-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+  }
+  
+  .profile-field {
+    padding: 1rem;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .profile-field:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-3px);
+  }
+  
+  .profile-field label {
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+  
+  .profile-field p {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+  
+  .feature-card {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 10px;
+    height: 100%;
+    background: rgba(255,255,255,0.03);
+    transition: all 0.3s ease;
+  }
+  
+  .feature-card:hover {
+    background: rgba(255,255,255,0.08);
+    transform: translateY(-5px);
+  }
+  
+  .feature-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 1.5rem;
+    color: white;
+  }
+  
+  .bg-purple {
+    background: linear-gradient(135deg, #8E2DE2, #4A00E0);
+  }
+  
+  .bg-orange {
+    background: linear-gradient(135deg, #FF512F, #F09819);
+  }
+  
+  .bg-teal {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+  }
+  
+  .btn-lg {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-lg:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+  
+  .badge {
+    font-weight: 500;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Set active nav link
+    document.querySelectorAll('.nav-link').forEach(link => {
+      if(link.textContent.includes('Student Dashboard')) {
+        link.classList.add('active');
+      }
+    });
+    
+    // Add subtle animations to cards
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+      setTimeout(() => {
+        card.style.opacity = 1;
+        card.style.transform = 'translateY(0)';
+      }, 150 * index);
+    });
+  });
+</script>
 {% endblock %}

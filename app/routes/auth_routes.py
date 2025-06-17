@@ -18,9 +18,10 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME")
 api_key = os.getenv("CLOUDINARY_API_KEY")
 api_secret = os.getenv("CLOUDINARY_API_SECRET")
+folder = os.getenv("CLOUDINARY_FOLDER")  # ✅ Use valid Python variable name
 
-if not all([cloud_name, api_key, api_secret]):
-    raise RuntimeError("Missing Cloudinary credentials in .env")
+if not all([cloud_name, api_key, api_secret, folder]):
+    raise RuntimeError("Missing Cloudinary credentials or folder in .env")
 
 cloudinary.config(
     cloud_name=cloud_name,
@@ -74,12 +75,18 @@ async def register_post(
 
     # Upload to Cloudinary
     try:
+        folder = os.getenv("CLOUDINARY_FOLDER", "proctor-system")  # Make sure this is exactly: proctor-system
+
         upload_result = cloudinary.uploader.upload(
             io.BytesIO(contents),
-            public_id=f"faces/{safe_name}",
+            public_id=f"{folder}/{safe_name}",
+            folder=folder,  # <--- ADD THIS LINE TOO
             overwrite=True,
-            resource_type="image"
+            resource_type="image",
+            use_filename=False,
+            unique_filename=False,
         )
+        print(f"this is upload {folder}")
         image_url = upload_result["secure_url"]
     except Exception as e:
         return templates.TemplateResponse("register.html", {"request": request, "msg": f"Upload failed: {str(e)}"})
@@ -128,5 +135,11 @@ def login_post(
 
 
 @router.get("/api/current-user")
-async def get_current_user_endpoint(user: str = Depends(auth.get_current_username)):
-    return {"name": user}
+async def get_current_user_endpoint(user: str = Depends(auth.get_current_username), db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter_by(name=user).first()
+    if not db_user:
+        return {"error": "User not found"}
+    return {
+        "name": db_user.name,
+        "image_url": db_user.image_url  # ensure this is stored in DB at registration
+    }

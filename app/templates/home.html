@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block title %}Home | My Portal{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5">
+  <div class="container py-5">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-5 mb-lg-0">
+        <h1 class="display-3 fw-bold mb-4">Transform Your Learning Experience</h1>
+        <p class="lead mb-4">My Portal is an advanced education platform that connects students with learning materials, interactive quizzes, and personalized progress tracking.</p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="#features" class="btn btn-light btn-lg px-4 py-3">Explore Features</a>
+          <a href="#" class="btn btn-outline-light btn-lg px-4 py-3">Get Started</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="hero-image position-relative">
+          <div class="position-absolute top-0 start-0 bg-warning rounded-circle" style="width: 150px; height: 150px; z-index: 0;"></div>
+          <div class="position-absolute bottom-0 end-0 bg-info rounded-circle" style="width: 120px; height: 120px; z-index: 0;"></div>
+          <div class="position-relative z-1 p-4">
+            <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&auto=format&fit=crop&w=700&q=80" class="img-fluid rounded shadow-lg" alt="Students Learning">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-3 col-6 text-center">
+        <div class="display-5 fw-bold text-primary">5,000+</div>
+        <div class="text-muted">Active Students</div>
+      </div>
+      <div class="col-md-3 col-6 text-center">
+        <div class="display-5 fw-bold text-primary">1,200+</div>
+        <div class="text-muted">Learning Materials</div>
+      </div>
+      <div class="col-md-3 col-6 text-center">
+        <div class="display-5 fw-bold text-primary">98%</div>
+        <div class="text-muted">Satisfaction Rate</div>
+      </div>
+      <div class="col-md-3 col-6 text-center">
+        <div class="display-5 fw-bold text-primary">24/7</div>
+        <div class="text-muted">Support Available</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-5">
+  <div class="container py-5">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold mb-3">Powerful Learning Features</h2>
+      <p class="lead text-muted">Everything you need for effective online education</p>
+    </div>
+    
+    <div class="row g-4">
+      <!-- Feature 1 -->
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4">
+            <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-4" style="width: 70px; height: 70px;">
+              <i class="bi bi-journal-bookmark fs-2"></i>
+            </div>
+            <h3 class="h4 mb-3">Learning Materials</h3>
+            <p class="text-muted mb-0">Access comprehensive study resources, lecture notes, and educational content organized by subjects and difficulty levels.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Feature 2 -->
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4">
+            <div class="feature-icon bg-success bg-opacity-10 text-success rounded-circle p-3 mb-4" style="width: 70px; height: 70px;">
+              <i class="bi bi-question-circle fs-2"></i>
+            </div>
+            <h3 class="h4 mb-3">Interactive Quizzes</h3>
+            <p class="text-muted mb-0">Test your knowledge with our interactive quizzes that provide instant feedback and detailed explanations.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Feature 3 -->
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4">
+            <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle p-3 mb-4" style="width: 70px; height: 70px;">
+              <i class="bi bi-graph-up fs-2"></i>
+            </div>
+            <h3 class="h4 mb-3">Progress Tracking</h3>
+            <p class="text-muted mb-0">Monitor your learning journey with detailed analytics and visual progress reports to identify strengths and areas for improvement.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Feature 4 -->
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4">
+            <div class="feature-icon bg-warning bg-opacity-10 text-warning rounded-circle p-3 mb-4" style="width: 70px; height: 70px;">
+              <i class="bi bi-people fs-2"></i>
+            </div>
+            <h3 class="h4 mb-3">User Management</h3>
+            <p class="text-muted mb-0">Admins can easily manage users, assign roles, and monitor activity to ensure a smooth learning environment.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Feature 5 -->
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4">
+            <div class="feature-icon bg-danger bg-opacity-10 text-danger rounded-circle p-3 mb-4" style="width: 70px; height: 70px;">
+              <i class="bi bi-collection fs-2"></i>
+            </div>
+            <h3 class="h4 mb-3">Content Management</h3>
+            <p class="text-muted mb-0">Easily create, organize, and update educational content to keep materials current and relevant.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Feature 6 -->
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4">
+            <div class="feature-icon bg-purple bg-opacity-10 text-purple rounded-circle p-3 mb-4" style="width: 70px; height: 70px;">
+              <i class="bi bi-award fs-2"></i>
+            </div>
+            <h3 class="h4 mb-3">Achievements</h3>
+            <p class="text-muted mb-0">Earn badges and certificates as you progress through courses and achieve learning milestones.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-5 bg-light">
+  <div class="container py-5">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold mb-3">What Our Users Say</h2>
+      <p class="lead text-muted">Hear from students and educators using our platform</p>
+    </div>
+    
+    <div class="row g-4">
+      <!-- Testimonial 1 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4">
+            <div class="d-flex mb-4">
+              <img src="https://randomuser.me/api/portraits/women/32.jpg" class="rounded-circle me-3" width="60" height="60" alt="Sarah Johnson">
+              <div>
+                <h5 class="mb-0">Sarah Johnson</h5>
+                <p class="text-muted mb-0">Student</p>
+              </div>
+            </div>
+            <p class="mb-0">"My Portal has completely transformed how I study. The quizzes help me identify weak areas, and the progress tracking keeps me motivated!"</p>
+          </div>
+          <div class="card-footer bg-transparent border-0 py-3">
+            <div class="text-warning">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Testimonial 2 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4">
+            <div class="d-flex mb-4">
+              <img src="https://randomuser.me/api/portraits/men/54.jpg" class="rounded-circle me-3" width="60" height="60" alt="David Chen">
+              <div>
+                <h5 class="mb-0">David Chen</h5>
+                <p class="text-muted mb-0">Educator</p>
+              </div>
+            </div>
+            <p class="mb-0">"As an instructor, I love how easy it is to manage content and track student progress. The admin tools save me hours every week."</p>
+          </div>
+          <div class="card-footer bg-transparent border-0 py-3">
+            <div class="text-warning">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-half"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Testimonial 3 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4">
+            <div class="d-flex mb-4">
+              <img src="https://randomuser.me/api/portraits/women/67.jpg" class="rounded-circle me-3" width="60" height="60" alt="Maria Rodriguez">
+              <div>
+                <h5 class="mb-0">Maria Rodriguez</h5>
+                <p class="text-muted mb-0">Parent</p>
+              </div>
+            </div>
+            <p class="mb-0">"I can see exactly where my child needs help through the portal's progress reports. It's made remote learning so much more effective."</p>
+          </div>
+          <div class="card-footer bg-transparent border-0 py-3">
+            <div class="text-warning">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white">
+  <div class="container py-5">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-8">
+        <h2 class="display-5 fw-bold mb-4">Ready to Transform Your Learning?</h2>
+        <p class="lead mb-4">Join thousands of students and educators who are already using My Portal to enhance their educational experience.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+          <a href="#" class="btn btn-light btn-lg px-4 py-3">Create Account</a>
+          <a href="#" class="btn btn-outline-light btn-lg px-4 py-3">Schedule a Demo</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Technologies -->
+<section class="py-5">
+  <div class="container py-5">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold mb-3">Built With Modern Technologies</h2>
+      <p class="lead text-muted">Our platform leverages cutting-edge tools for the best experience</p>
+    </div>
+    
+    <div class="row g-4 justify-content-center">
+      <div class="col-auto">
+        <div class="tech-card p-4 rounded shadow-sm text-center">
+          <i class="bi bi-lightning-charge-fill text-warning fs-1 mb-3"></i>
+          <h4 class="mb-0">FastAPI</h4>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="tech-card p-4 rounded shadow-sm text-center">
+          <i class="bi bi-database-fill text-primary fs-1 mb-3"></i>
+          <h4 class="mb-0">SQLite</h4>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="tech-card p-4 rounded shadow-sm text-center">
+          <i class="bi bi-bootstrap-fill text-purple fs-1 mb-3"></i>
+          <h4 class="mb-0">Bootstrap 5</h4>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="tech-card p-4 rounded shadow-sm text-center">
+          <i class="bi bi-code-slash text-success fs-1 mb-3"></i>
+          <h4 class="mb-0">Python</h4>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="tech-card p-4 rounded shadow-sm text-center">
+          <i class="bi bi-git text-danger fs-1 mb-3"></i>
+          <h4 class="mb-0">Git</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block styles %}
+<style>
+  .hero-section {
+    background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+  }
+  
+  .feature-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .tech-card {
+    transition: transform 0.3s ease;
+    width: 150px;
+  }
+  
+  .tech-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .bg-purple {
+    background-color: #6f42c1;
+  }
+  
+  .text-purple {
+    color: #6f42c1;
+  }
+  
+  .hero-image {
+    border-radius: 20px;
+    overflow: hidden;
+  }
+</style>
+{% endblock %}

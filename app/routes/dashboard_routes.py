@@ -24,9 +24,6 @@ async def recognize(request: Request, user=Depends(get_current_user)):
         return RedirectResponse("/login")
     return templates.TemplateResponse("recognize.html", {"request": request, "user": user})
 
-from fastapi import APIRouter, Request
-from fastapi.templating import Jinja2Templates
-
 
 @router.get("/about")
 def about_page(request: Request):

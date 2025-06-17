@@ -23,15 +23,16 @@ app.include_router(dashboard_routes.router)
 app.include_router(proctor_routes.router)
 app.include_router(admin.router)
 
-@app.get("/", include_in_schema=False)
-def root():
-    return RedirectResponse("/login")
+@app.get("/", name="home_page")
+async def home(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
 
 @app.get("/logout")
 def logout(request: Request):
     response = templates.TemplateResponse("logout.html", {"request": request})
     response.delete_cookie("user")
     return response
+
 
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates

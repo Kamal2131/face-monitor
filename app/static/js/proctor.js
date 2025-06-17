@@ -19,20 +19,20 @@
 //       // Get current username
 //       const userRes = await fetch('/api/current-user');
 //       const { name } = await userRes.json();
-      
+
 //       // Load registered face image
 //       const img = await faceapi.fetchImage(`/static/uploads/${name}.jpg`);
-      
+
 //       // Generate face descriptor
 //       const detection = await faceapi.detectSingleFace(img)
 //         .withFaceLandmarks()
 //         .withFaceDescriptor();
-      
+
 //       if (!detection) {
 //         showAlert('No face found in registration photo!');
 //         return null;
 //       }
-      
+
 //       return detection.descriptor;
 //     } catch (error) {
 //       console.error('Descriptor load failed:', error);
@@ -55,10 +55,10 @@
 //       const video = document.getElementById('video');
 //       video.srcObject = stream;
 //       video.style.transform = 'scaleX(-1)';
-      
+
 //       await new Promise(resolve => video.onloadedmetadata = resolve);
 //       await video.play();
-      
+
 //       return true;
 //     } catch (error) {
 //       showAlert('Camera access required!');
@@ -87,7 +87,7 @@
 //           userDescriptor, 
 //           detection.descriptor
 //         );
-        
+
 //         if (distance <= MATCH_THRESHOLD) {
 //           isMatch = true;
 //           break;
@@ -109,7 +109,7 @@
 //   function updateStatus(text, type) {
 //     const statusElem = document.getElementById('verification-status');
 //     if (!statusElem) return;
-    
+
 //     statusElem.textContent = text;
 //     statusElem.className = `status-${type}`;
 //   }
@@ -164,7 +164,7 @@
 
 
 
-;(async () => {
+; (async () => {
   const MODEL_PATH = '/static/models';
   const DETECT_INTERVAL = 1500;
   const MATCH_THRESHOLD = 0.6;
@@ -186,7 +186,11 @@
       const userRes = await fetch('/api/current-user');
       const { name } = await userRes.json();
 
-      const img = await faceapi.fetchImage(`/static/uploads/${name}.jpg`);
+      const response = await fetch("/api/current-user");
+      const data = await response.json();
+
+      const imageUrl = data.image_url;  // this should be the full Cloudinary URL
+      const img = await faceapi.fetchImage(imageUrl);
       const detection = await faceapi.detectSingleFace(img)
         .withFaceLandmarks()
         .withFaceDescriptor();
