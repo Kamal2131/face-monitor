@@ -1,19 +1,8 @@
-# ─── 1. Use base image with prebuilt dlib wheel support ───────────────────────
-FROM python:3.10-bullseye
+# ─── 1. Use a lightweight official Python image ───────────────────────────────
+FROM python:3.10-slim-buster
 
-# ─── 2. Install system dependencies for OpenCV, dlib, and general build tools ─
+# ─── 2. Install only essential system packages ────────────────────────────────
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
-    libatlas-base-dev \
-    libopenblas-dev \
-    liblapack-dev \
-    libx11-dev \
-    libgtk-3-dev \
-    libboost-python-dev \
-    libboost-system-dev \
-    libboost-serialization-dev \
-    libboost-filesystem-dev \
     libjpeg-dev \
     ffmpeg \
     libsm6 \
@@ -23,19 +12,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # ─── 3. Set working directory ─────────────────────────────────────────────────
 WORKDIR /app
 
-# ─── 4. Copy and install Python dependencies ──────────────────────────────────
+# ─── 4. Install Python dependencies ───────────────────────────────────────────
 COPY requirements.txt /app/
 
-# Force pip to use binary wheels (avoid compiling from source)
 RUN pip install --upgrade pip \
-    && pip install --only-binary :all: dlib \
     && pip install --no-cache-dir -r requirements.txt
 
-# ─── 5. Copy application code ─────────────────────────────────────────────────
+# ─── 5. Copy application source code ──────────────────────────────────────────
 COPY . /app
 
-# ─── 6. Expose port for Uvicorn ───────────────────────────────────────────────
+# ─── 6. Expose the app port ───────────────────────────────────────────────────
 EXPOSE 8000
 
-# ─── 7. Run FastAPI app using Uvicorn ─────────────────────────────────────────
+# ─── 7. Start the FastAPI app ─────────────────────────────────────────────────
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
