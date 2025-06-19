@@ -106,7 +106,7 @@
         color: var(--text);
       }
 
-      /* Light Toggle */
+      /* Enhanced Light Toggle */
       .light-toggle {
         position: fixed;
         top: 85px;
@@ -115,67 +115,72 @@
         z-index: 999;
         text-align: center;
         transition: var(--transition);
+        width: 60px;
+        height: 90px;
       }
-
+      
       .light-toggle:hover {
         transform: scale(1.05);
       }
-
+      
       .bulb {
         position: relative;
-        width: 50px;
-        height: 80px;
-        margin: auto;
+        width: 100%;
+        height: 100%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
-
+      
       .bulb-top {
-        width: 50px;
-        height: 50px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
         background: #bdc3c7;
         transition: var(--transition);
+        z-index: 2;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
       }
-
+      
       .bulb-bottom {
-        width: 16px;
-        height: 16px;
+        width: 12px;
+        height: 12px;
         background: #95a5a6;
-        margin: auto;
-        margin-top: -8px;
-        border-radius: 0 0 4px 4px;
+        margin-top: -6px;
+        border-radius: 0 0 3px 3px;
+        z-index: 2;
       }
-
+      
       .bulb-wire {
-        width: 3px;
-        height: 40px;
+        width: 2px;
+        height: 25px;
         background: #7f8c8d;
-        margin: auto;
+        z-index: 1;
       }
-
+      
       .bulb-glow {
         position: absolute;
         top: 0;
-        left: 0;
-        width: 50px;
-        height: 50px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
         background: #f1c40f;
         opacity: 0;
-        box-shadow: 0 0 20px #f1c40f;
-        transition: var(--transition);
-        pointer-events: none;
+        box-shadow: 0 0 15px #f1c40f;
+        transition: opacity 0.3s ease;
+        z-index: 0;
       }
-
+      
       body.light-on .bulb-top {
         background: #f1c40f;
-        box-shadow: 0 0 10px #f1c40f;
+        box-shadow: 0 0 8px #f1c40f;
       }
-
+      
       body.light-on .bulb-glow {
         opacity: 0.6;
       }
-
+      
       .toggle-label {
         margin-top: 8px;
         font-size: 0.8rem;
@@ -378,7 +383,10 @@
               <a class="nav-link" href="/about">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/logout">Logout</a>
+              <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Sign Up</a>
             </li>
           </ul>
         </div>
@@ -448,7 +456,7 @@
       </div>
     </div>
 
-    <!-- Light Mode Toggle -->
+    <!-- Enhanced Light Mode Toggle -->
     <div class="light-toggle" onclick="toggleBulb()" title="Toggle Light Mode">
       <div class="bulb">
         <div class="bulb-top"></div>
@@ -470,10 +478,10 @@
               teachers, and administrators.
             </p>
             <div class="social-icons">
-              <a href="#"><i class="fab fa-facebook-f"></i></a>
-              <a href="#"><i class="fab fa-twitter"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              <a href="https://www.linkedin.com/in/kamal-krishna-ghosh-970327246/"><i class="fab fa-facebook-f"></i></a>
+              <a href="https://x.com/kingbadanti1173"><i class="fab fa-twitter"></i></a>
+              <a href="https://www.instagram.com/k_k_g_18/"><i class="fab fa-instagram"></i></a>
+              <a href="https://www.facebook.com/kamal.ghosh.1004"><i class="fab fa-linkedin-in"></i></a>
             </div>
           </div>
           <div class="col-md-4 mb-4">
@@ -488,11 +496,10 @@
           </div>
           <div class="col-md-4 mb-4">
             <h5>Contact Us</h5>
-            <p><i class="fas fa-envelope me-2"></i> support@myportal.com</p>
-            <p><i class="fas fa-phone me-2"></i> +1 (555) 123-4567</p>
+            <p><i class="fas fa-envelope me-2"></i> kkg9@gmail.com</p>
+            <p><i class="fas fa-phone me-2"></i> +1 9099099090</p>
             <p>
-              <i class="fas fa-map-marker-alt me-2"></i> 123 Education St,
-              Learnville
+              <i class="fas fa-map-marker-alt me-2"></i> kolkata
             </p>
           </div>
         </div>
@@ -510,7 +517,7 @@
 
     {% block scripts %}
     <script>
-      // Enhanced light/dark mode toggle
+      // Enhanced light/dark mode toggle with animations
       function toggleBulb() {
         const body = document.body;
         body.classList.toggle("light-on");
@@ -520,6 +527,13 @@
         label.textContent = body.classList.contains("light-on")
           ? "Light Mode"
           : "Dark Mode";
+
+        // Add glow effect
+        const bulbGlow = document.querySelector(".bulb-glow");
+        bulbGlow.style.animation = "pulse 0.5s";
+        setTimeout(() => {
+          bulbGlow.style.animation = "";
+        }, 500);
 
         // Save preference to localStorage
         localStorage.setItem(
@@ -551,6 +565,17 @@
           }
         });
       });
+
+      // Add pulse animation for the bulb glow
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes pulse {
+          0% { transform: scale(1); opacity: 0.6; }
+          50% { transform: scale(1.2); opacity: 0.8; }
+          100% { transform: scale(1); opacity: 0.6; }
+        }
+      `;
+      document.head.appendChild(style);
     </script>
     {% endblock %}
   </body>

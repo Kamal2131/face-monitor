@@ -2,20 +2,166 @@
 
 {% block title %}Proctoring Test{% endblock %}
 
+{% block head %}
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .proctoring-container {
+      max-width: 800px;
+      margin: 2rem auto;
+    }
+    
+    .status-info {
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .status-info.alert-success {
+      background-color: #d1e7dd;
+      color: #0f5132;
+    }
+    
+    .status-info.alert-warning {
+      background-color: #fff3cd;
+      color: #664d03;
+    }
+    
+    .status-info.alert-danger {
+      background-color: #f8d7da;
+      color: #842029;
+    }
+    
+    .loading-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      min-height: 300px;
+    }
+    
+    .loader {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #0d6efd;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1.5s linear infinite;
+      margin-bottom: 1.5rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    #video {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      background: #000;
+    }
+    
+    .proctor-alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+    
+    .alert-content {
+      padding: 1rem 1.5rem;
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
-  <div id="verification-status" class="status-info">
-    Initializing Face Verification...
-  </div>
+  <div class="proctoring-container">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">Online Proctoring System</h3>
+      </div>
+      <div class="card-body">
+        <div id="verification-status" class="status-info alert-info">
+          Initializing Face Verification...
+        </div>
 
-  <div id="loading" class="loading-screen">
-    <div class="loader"></div>
-    <p>Loading Face Verification System...</p>
-  </div>
+        <div id="loading" class="loading-screen">
+          <div class="loader"></div>
+          <p class="fs-5 text-muted">Loading Face Verification System...</p>
+        </div>
 
-  <video id="video" autoplay muted playsinline></video>
+        <div class="video-container mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge bg-info">Live Camera Feed</span>
+            <small class="text-muted">Make sure your face is clearly visible</small>
+          </div>
+          <video id="video" autoplay muted playsinline class="w-100"></video>
+        </div>
+
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle me-2"></i>
+          This system continuously verifies your identity during the test. 
+          Please remain in front of your camera and ensure good lighting.
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block scripts %}
   <script defer src="{{ url_for('static', path='js/face-api.min.js') }}"></script>
+  <script>
+    // Update to use Bootstrap alert classes
+    function updateStatus(text, type) {
+      const statusElem = document.getElementById('verification-status');
+      if (!statusElem) return;
+
+      statusElem.textContent = text;
+      
+      // Remove all alert classes
+      statusElem.classList.remove(
+        'alert-success', 'alert-warning', 'alert-danger', 'alert-info'
+      );
+      
+      // Add appropriate Bootstrap-based class
+      statusElem.classList.add(`alert-${type}`);
+    }
+
+    // Update showAlert to use Bootstrap styling
+    function showAlert(message) {
+      const alert = document.createElement('div');
+      alert.className = 'proctor-alert';
+      alert.innerHTML = `
+        <div class="alert-content alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>⚠️ Alert:</strong> ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      `;
+      document.body.appendChild(alert);
+      
+      // Auto-dismiss after 5 seconds
+      setTimeout(() => {
+        const bsAlert = new bootstrap.Alert(alert.querySelector('.alert'))
+        bsAlert.close();
+      }, 5000);
+    }
+
+    // ... rest of your proctor.js code remains the same ...
+  </script>
   <script defer src="{{ url_for('static', path='js/proctor.js') }}"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}
