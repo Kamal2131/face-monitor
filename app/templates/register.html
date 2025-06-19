@@ -2,44 +2,94 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-  <div class="card shadow-lg p-4" style="width: 100%; max-width: 500px;">
-    <h2 class="text-center mb-4">Register</h2>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh; background-color: #f8f9fa;">
+  <div class="card shadow-lg p-4 p-md-5" style="width: 100%; max-width: 550px; border-radius: 12px; border: none;">
+    <div class="text-center mb-4">
+      <i class="bi bi-person-plus" style="font-size: 3rem; color: #198754;"></i>
+      <h2 class="mt-3 mb-2 fw-bold">Create Account</h2>
+      <p class="text-muted">Register to get started</p>
+    </div>
 
     {% if msg %}
-      <div class="alert alert-danger text-center">{{ msg }}</div>
+      <div class="alert alert-danger text-center py-2 mb-4">{{ msg }}</div>
     {% endif %}
 
     <form id="registerForm" method="post" enctype="multipart/form-data">
-      <div class="mb-3">
-        <label for="name" class="form-label">Username</label>
-        <input name="name" id="name" type="text" class="form-control" placeholder="Enter name" required />
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="name" class="form-label fw-medium">Username</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light">
+              <i class="bi bi-person"></i>
+            </span>
+            <input name="name" id="name" type="text" class="form-control" placeholder="Enter username" required />
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <label for="password" class="form-label fw-medium">Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light">
+              <i class="bi bi-lock"></i>
+            </span>
+            <input name="password" id="password" type="password" class="form-control" placeholder="Create password" required />
+          </div>
+        </div>
       </div>
 
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input name="password" id="password" type="password" class="form-control" placeholder="Enter password" required />
-      </div>
-
-      <div class="mb-3 text-center">
-        <label class="form-label d-block">Capture Your Face</label>
-        <video id="video" width="320" height="240" autoplay class="border rounded shadow-sm mb-2"></video><br>
-        <button type="button" class="btn btn-outline-primary" onclick="capture()">📸 Capture</button><br>
+      <div class="mt-4 mb-3 text-center">
+        <label class="form-label fw-medium d-block mb-3">Face Recognition Setup</label>
+        
+        <!-- Camera Preview Container -->
+        <div id="cameraContainer" class="position-relative mx-auto" style="width: 320px;">
+          <video id="video" width="320" height="240" autoplay 
+                 class="border rounded-3 shadow-sm object-fit-cover" 
+                 style="background: linear-gradient(45deg, #e0e0e0, #f5f5f5);"></video>
+          <div class="position-absolute top-0 end-0 mt-2 me-2">
+            <div class="bg-success rounded-circle p-1" style="width: 20px; height: 20px;"></div>
+          </div>
+        </div>
+        
+        <!-- Image Preview Container (Initially Hidden) -->
+        <div id="previewContainer" class="d-none position-relative mx-auto" style="width: 320px;">
+          <img id="preview" class="border rounded-3 shadow-sm" width="320" height="240" 
+               style="object-fit: cover; background: linear-gradient(45deg, #e0e0e0, #f5f5f5);">
+          <div class="position-absolute top-0 end-0 mt-2 me-2">
+            <div class="bg-success rounded-circle p-1" style="width: 20px; height: 20px;"></div>
+          </div>
+        </div>
+        
+        <div class="mt-3">
+          <button type="button" id="captureBtn" class="btn btn-outline-primary px-4 py-2" onclick="capture()">
+            <i class="bi bi-camera me-2"></i>Capture Image
+          </button>
+          <button type="button" id="retakeBtn" class="btn btn-outline-secondary px-4 py-2 d-none" onclick="retake()">
+            <i class="bi bi-arrow-repeat me-2"></i>Retake
+          </button>
+        </div>
+        
         <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
         <input type="hidden" name="face_image_data" id="face_image_data" />
+        
+        <p class="text-muted small mt-3 mb-0">
+          We'll use this image for facial recognition login
+        </p>
       </div>
 
-      <div class="d-grid mt-3">
-        <button type="submit" class="btn btn-success">Sign Up</button>
+      <div class="d-grid mt-2">
+        <button type="submit" class="btn btn-success btn-lg fw-bold py-2">
+          <i class="bi bi-person-check me-2"></i>Create Account
+        </button>
       </div>
     </form>
 
-    <div class="text-center mt-3">
-      <p>Already have an account? <a href="/login">Login here</a></p>
+    <div class="text-center mt-4 pt-3 border-top">
+      <p class="mb-0">Already have an account? 
+        <a href="/login" class="text-decoration-none fw-medium">Login here</a>
+      </p>
     </div>
   </div>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
@@ -47,9 +97,17 @@
   const video = document.getElementById('video');
   const canvas = document.getElementById('canvas');
   const faceImageData = document.getElementById('face_image_data');
+  const preview = document.getElementById('preview');
+  const previewContainer = document.getElementById('previewContainer');
+  const cameraContainer = document.getElementById('cameraContainer');
+  const captureBtn = document.getElementById('captureBtn');
+  const retakeBtn = document.getElementById('retakeBtn');
+  let stream = null;
 
+  // Initialize camera
   navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
+    .then(s => {
+      stream = s;
       video.srcObject = stream;
     })
     .catch(err => {
@@ -62,7 +120,42 @@
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     const dataUrl = canvas.toDataURL('image/jpeg');
     faceImageData.value = dataUrl;
-    alert("Photo captured successfully!");
+    
+    // Show preview instead of video
+    preview.src = dataUrl;
+    cameraContainer.classList.add('d-none');
+    previewContainer.classList.remove('d-none');
+    
+    // Toggle buttons
+    captureBtn.classList.add('d-none');
+    retakeBtn.classList.remove('d-none');
+    
+    // Stop camera stream
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+  }
+
+  function retake() {
+    // Reset UI
+    previewContainer.classList.add('d-none');
+    cameraContainer.classList.remove('d-none');
+    captureBtn.classList.remove('d-none');
+    retakeBtn.classList.add('d-none');
+    
+    // Clear previous capture
+    faceImageData.value = '';
+    
+    // Restart camera
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(s => {
+        stream = s;
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        alert("Camera access denied or not available.");
+        console.error(err);
+      });
   }
 
   document.getElementById('registerForm').addEventListener('submit', async (e) => {
