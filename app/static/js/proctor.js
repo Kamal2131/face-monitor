@@ -5,6 +5,9 @@
   const MATCH_THRESHOLD = 0.6;
   let userDescriptor = null;
   let isVerifying = true;
+  
+  // Add tab switch detection flag
+  let tabActive = true;
 
   // Load face-api models
   await Promise.all([
@@ -16,17 +19,15 @@
   // Get current user's face descriptor from uploaded image
   async function loadUserDescriptor() {
     try {
+      const res = await fetch("/api/current-user");
+      const data = await res.json();
 
-        const res = await fetch("/api/current-user");
-        const data = await res.json();
-
-        if (data.error) {
-            console.error("User fetch error:", data.error);
-            return;
-        }
-        const imgUrl = data.image_url;  // e.g., Cloudinary URL
-        const img = await faceapi.fetchImage(imgUrl);
-
+      if (data.error) {
+        console.error("User fetch error:", data.error);
+        return;
+      }
+      const imgUrl = data.image_url;  // e.g., Cloudinary URL
+      const img = await faceapi.fetchImage(imgUrl);
 
       // Generate face descriptor
       const detection = await faceapi.detectSingleFace(img)
@@ -60,6 +61,9 @@
       const video = document.getElementById('video');
       video.srcObject = stream;
       video.style.transform = 'scaleX(-1)';
+      
+      // Add Bootstrap classes for responsive sizing
+      video.classList.add('mx-auto', 'd-block', 'w-50', 'mt-3');
 
       await new Promise(resolve => video.onloadedmetadata = resolve);
       await video.play();
@@ -74,7 +78,7 @@
 
   // Face verification logic
   async function verifyFace() {
-    if (!userDescriptor || !isVerifying) return;
+    if (!userDescriptor || !isVerifying || !tabActive) return;
 
     try {
       const detections = await faceapi.detectAllFaces(video)
@@ -146,8 +150,23 @@
     }).catch(error => console.error('Event report failed:', error));
   }
 
+  // Tab visibility handler
+  function handleVisibilityChange() {
+    if (document.visibilityState === 'hidden') {
+      tabActive = false;
+      updateStatus('Tab Switch Detected! ⚠️', 'error');
+      warn('tab_switch');
+    } else {
+      tabActive = true;
+      updateStatus('Verification Active', 'info');
+    }
+  }
+
   // Main initialization
   async function initializeProctoring() {
+    // Add tab switch detection
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
     // Load user's face data
     userDescriptor = await loadUserDescriptor();
     if (!userDescriptor) return;
@@ -166,4 +185,3 @@
   // Start the system
   initializeProctoring();
 })();
-
