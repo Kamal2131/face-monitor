@@ -1,5 +1,5 @@
 // app/static/js/proctor.js
-;(async () => {
+; (async () => {
   const MODEL_PATH = '/static/models';
   const DETECT_INTERVAL = 1500;
   const MATCH_THRESHOLD = 0.6;
@@ -21,7 +21,9 @@
       const { name } = await userRes.json();
 
       // Load registered face image
-      const img = await faceapi.fetchImage(`/static/uploads/${name}.jpg`);
+      const imgUrl = `https://res.cloudinary.com/dgdshcjl7/image/upload/v1750440962/proctor-system/proctor-system/${name}.jpg`;
+      const img = await faceapi.fetchImage(imgUrl);
+
 
       // Generate face descriptor
       const detection = await faceapi.detectSingleFace(img)
@@ -84,7 +86,7 @@
       let isMatch = false;
       for (const detection of detections) {
         const distance = faceapi.euclideanDistance(
-          userDescriptor, 
+          userDescriptor,
           detection.descriptor
         );
 
