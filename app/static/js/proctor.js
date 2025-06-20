@@ -16,13 +16,16 @@
   // Get current user's face descriptor from uploaded image
   async function loadUserDescriptor() {
     try {
-      // Get current username
-      const userRes = await fetch('/api/current-user');
-      const { name } = await userRes.json();
 
-      // Load registered face image
-      const imgUrl = `https://res.cloudinary.com/dgdshcjl7/image/upload/v1750440962/proctor-system/proctor-system/${name}.jpg`;
-      const img = await faceapi.fetchImage(imgUrl);
+        const res = await fetch("/api/current-user");
+        const data = await res.json();
+
+        if (data.error) {
+            console.error("User fetch error:", data.error);
+            return;
+        }
+        const imgUrl = data.image_url;  // e.g., Cloudinary URL
+        const img = await faceapi.fetchImage(imgUrl);
 
 
       // Generate face descriptor
