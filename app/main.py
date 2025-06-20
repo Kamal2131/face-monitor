@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.exception_handlers import http_exception_handler
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from app.routes import auth_routes, dashboard_routes, proctor_routes, admin
@@ -33,6 +34,10 @@ def logout(request: Request):
     response.delete_cookie("user")
     return response
 
-
-from fastapi import APIRouter, Request
-from fastapi.templating import Jinja2Templates
+@app.exception_handler(HTTPException)
+async def custom_http_exception_handler(request: Request, exc: HTTPException):
+    if exc.status_code == 401:
+        return templates.TemplateResponse("login_required.html", {"request": request}, status_code=401)
+    elif exc.status_code == 403:
+        return templates.TemplateResponse("not_authorized.html", {"request": request}, status_code=403)
+    return await http_exception_handler(request, exc)
