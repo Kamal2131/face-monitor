@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.exception_handlers import http_exception_handler
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from app.routes import auth_routes, dashboard_routes, proctor_routes, admin
+from app.routes import auth_routes, dashboard_routes, proctor_routes, admin, quiz
 from app.database import Base, engine
 from app.middleware import auth_middleware
 from fastapi.responses import RedirectResponse
@@ -23,6 +23,7 @@ app.include_router(auth_routes.router)
 app.include_router(dashboard_routes.router)
 app.include_router(proctor_routes.router)
 app.include_router(admin.router)
+app.include_router(quiz.router)
 
 @app.get("/", name="home_page")
 async def home(request: Request):

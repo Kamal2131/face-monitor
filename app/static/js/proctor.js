@@ -5,18 +5,34 @@
   const MATCH_THRESHOLD = 0.6;
   let userDescriptor = null;
   let isVerifying = true;
-  
-  // Add tab switch detection flag
   let tabActive = true;
+  let examData = { topic: '', questions: [] };
+  let successCount = 0;
+  let warningCount = 0;
+  let processorVideo = null;
+  let floatingVideo = null;
 
-  // Load face-api models
-  await Promise.all([
-    faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_PATH),
-    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_PATH),
-    faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_PATH)
-  ]);
+  // Create hidden video element for processing
+  function createProcessorVideo() {
+    processorVideo = document.createElement('video');
+    processorVideo.id = 'video-processor';
+    processorVideo.autoplay = true;
+    processorVideo.playsinline = true;
+    processorVideo.style.display = 'none';
+    document.body.appendChild(processorVideo);
+    return processorVideo;
+  }
 
-  // Get current user's face descriptor from uploaded image
+  // Create floating video element
+  function createFloatingVideo() {
+    const container = document.getElementById('floating-video-container');
+    container.style.display = 'block';
+    
+    floatingVideo = document.getElementById('floating-video');
+    return floatingVideo;
+  }
+
+  // Get current user's face descriptor
   async function loadUserDescriptor() {
     try {
       const res = await fetch("/api/current-user");
@@ -24,12 +40,12 @@
 
       if (data.error) {
         console.error("User fetch error:", data.error);
-        return;
+        return null;
       }
-      const imgUrl = data.image_url;  // e.g., Cloudinary URL
+      
+      const imgUrl = data.image_url;
       const img = await faceapi.fetchImage(imgUrl);
 
-      // Generate face descriptor
       const detection = await faceapi.detectSingleFace(img)
         .withFaceLandmarks()
         .withFaceDescriptor();
@@ -58,15 +74,20 @@
         }
       });
 
-      const video = document.getElementById('video');
-      video.srcObject = stream;
-      video.style.transform = 'scaleX(-1)';
+      // Create video elements if needed
+      if (!processorVideo) createProcessorVideo();
+      if (!floatingVideo) createFloatingVideo();
       
-      // Add Bootstrap classes for responsive sizing
-      video.classList.add('mx-auto', 'd-block', 'w-50', 'mt-3');
+      // Assign stream to both videos
+      processorVideo.srcObject = stream;
+      floatingVideo.srcObject = stream;
 
-      await new Promise(resolve => video.onloadedmetadata = resolve);
-      await video.play();
+      // Play the videos
+      await new Promise(resolve => processorVideo.onloadedmetadata = resolve);
+      await processorVideo.play();
+      
+      await new Promise(resolve => floatingVideo.onloadedmetadata = resolve);
+      await floatingVideo.play();
 
       return true;
     } catch (error) {
@@ -81,12 +102,13 @@
     if (!userDescriptor || !isVerifying || !tabActive) return;
 
     try {
-      const detections = await faceapi.detectAllFaces(video)
+      const detections = await faceapi.detectAllFaces(processorVideo)
         .withFaceLandmarks()
         .withFaceDescriptors();
 
       if (detections.length === 0) {
         updateStatus('No face detected', 'warning');
+        warningCount++;
         return warn('no_face_detected');
       }
 
@@ -105,8 +127,10 @@
 
       if (isMatch) {
         updateStatus('Identity Verified ✅', 'success');
+        successCount++;
       } else {
         updateStatus('Unverified User ⚠️', 'error');
+        warningCount++;
         warn('unverified_face_detected');
       }
     } catch (error) {
@@ -119,34 +143,49 @@
     const statusElem = document.getElementById('verification-status');
     if (!statusElem) return;
 
+    // Map types to Bootstrap classes
+    const typeMap = {
+      success: 'alert-success',
+      warning: 'alert-warning',
+      error: 'alert-danger',
+      info: 'alert-info'
+    };
+    
     statusElem.textContent = text;
-    statusElem.className = `status-${type}`;
+    statusElem.className = `alert ${typeMap[type] || 'alert-info'}`;
   }
 
   // Alert system
   function showAlert(message) {
     const alert = document.createElement('div');
-    alert.className = 'proctor-alert';
+    alert.className = 'alert alert-warning alert-dismissible fade show';
+    alert.role = 'alert';
     alert.innerHTML = `
-      <div class="alert-content">
-        ⚠️ ${message}
-      </div>
+      <strong>⚠️ Alert:</strong> ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     `;
-    document.body.appendChild(alert);
-    setTimeout(() => alert.remove(), 5000);
+    
+    const container = document.querySelector('.proctoring-container');
+    if (container) {
+      container.prepend(alert);
+    }
   }
 
   // Event reporting
   function warn(reason) {
+    const eventData = {
+      events: [{
+        reason,
+        timestamp: new Date().toISOString(),
+        exam_topic: examData.topic,
+        question_numbers: examData.questions.join(', ')
+      }]
+    };
+
     fetch('/api/proctor/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        events: [{
-          reason,
-          timestamp: new Date().toISOString()
-        }]
-      })
+      body: JSON.stringify(eventData)
     }).catch(error => console.error('Event report failed:', error));
   }
 
@@ -162,10 +201,56 @@
     }
   }
 
+  // Collect exam data from user
+  function setupExamData() {
+    const topicInput = document.getElementById('exam-topic');
+    const questionsInput = document.getElementById('question-numbers');
+    const numQuestionsInput = document.getElementById('num-questions');
+    const startBtn = document.getElementById('start-exam-btn');
+    const currentTopic = document.getElementById('current-topic');
+    const currentQuestions = document.getElementById('current-questions');
+    
+    if (!topicInput || !questionsInput || !startBtn) return;
+    
+    startBtn.addEventListener('click', () => {
+      examData.topic = topicInput.value.trim();
+      
+      // Parse question numbers
+      examData.questions = questionsInput.value
+        .split(',')
+        .map(q => q.trim())
+        .filter(q => q);
+      
+      const numQuestions = parseInt(numQuestionsInput.value) || 5;
+      
+      if (!examData.topic || examData.questions.length === 0) {
+        showAlert('Please enter both topic and question numbers');
+        return;
+      }
+      
+      // Update UI with exam info
+      if (currentTopic) currentTopic.textContent = examData.topic;
+      if (currentQuestions) currentQuestions.textContent = examData.questions.join(', ');
+      
+      // Switch views
+      document.getElementById('exam-setup').classList.add('d-none');
+      document.getElementById('proctor-section').classList.remove('d-none');
+      
+      // Start proctoring
+      initializeProctoring();
+      
+      // Start quiz with the requested number of questions
+      startQuiz(examData.topic, numQuestions);
+    });
+  }
+
   // Main initialization
   async function initializeProctoring() {
     // Add tab switch detection
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Setup exam data collection
+    setupExamData();
     
     // Load user's face data
     userDescriptor = await loadUserDescriptor();
@@ -177,9 +262,6 @@
     // Start verification loop
     setInterval(verifyFace, DETECT_INTERVAL);
     updateStatus('Verification Active', 'info');
-
-    // Cleanup loading screen
-    document.getElementById('loading')?.remove();
   }
 
   // Start the system
