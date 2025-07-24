@@ -4,19 +4,23 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from fastapi import status
 from app.auth import get_current_user
+from app.services.dashboard import get_dashboard_data
+from app.database import get_db, Session
+from app.models import User
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
+@router.get("/", name="home_page")
+async def home(request: Request, user=Depends(get_current_user)):
+    return templates.TemplateResponse("home.html", {"request": request, "user": user})
+
+
 @router.get("/dashboard")
-async def dashboard(request: Request, user=Depends(get_current_user)):
-    if user is None:
-        return RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
-    
-    return templates.TemplateResponse("dashboard.html", {
-        "request": request,
-        "user": user
-    })
+def dashboard(request: Request, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    context = get_dashboard_data(db, current_user)
+    context["request"] = request
+    return templates.TemplateResponse("dashboard.html", context)
 
 @router.get("/recognize")
 async def recognize(request: Request, user=Depends(get_current_user)):
@@ -26,5 +30,5 @@ async def recognize(request: Request, user=Depends(get_current_user)):
 
 
 @router.get("/about")
-def about_page(request: Request):
-    return templates.TemplateResponse("about.html", {"request": request})
+def about_page(request: Request, user=Depends(get_current_user)):
+    return templates.TemplateResponse("about.html", {"request": request, "user": user})

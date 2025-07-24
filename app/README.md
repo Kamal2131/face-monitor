@@ -35,7 +35,7 @@ _A browser-based exam proctoring application built with FastAPI, SQLAlchemy, and
     Tracks browser tab changes to log suspicious behavior.
 
 - **Exam Session Management:**  
-    Admins can create, manage, and schedule multiple exams.
+    Admins can create user and delete user.
 
 - **User Role Management:**  
     Separate dashboards for admin and student roles.

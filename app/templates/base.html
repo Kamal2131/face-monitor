@@ -106,87 +106,45 @@
         color: var(--text);
       }
 
-      /* Enhanced Light Toggle */
-      .light-toggle {
-        position: fixed;
-        top: 85px;
-        right: 25px;
-        cursor: pointer;
-        z-index: 999;
-        text-align: center;
-        transition: var(--transition);
-        width: 60px;
-        height: 90px;
-      }
-      
-      .light-toggle:hover {
-        transform: scale(1.05);
-      }
-      
-      .bulb {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        margin: 0 auto;
+      /* Theme toggle button styling */
+      .theme-toggle {
         display: flex;
-        flex-direction: column;
         align-items: center;
-      }
-      
-      .bulb-top {
-        width: 30px;
-        height: 30px;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
-        background: #bdc3c7;
+        background: rgba(255, 255, 255, 0.1);
+        cursor: pointer;
         transition: var(--transition);
-        z-index: 2;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        margin-left: 10px;
       }
-      
-      .bulb-bottom {
-        width: 12px;
-        height: 12px;
-        background: #95a5a6;
-        margin-top: -6px;
-        border-radius: 0 0 3px 3px;
-        z-index: 2;
+
+      .theme-toggle:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: rotate(20deg);
       }
-      
-      .bulb-wire {
-        width: 2px;
-        height: 25px;
-        background: #7f8c8d;
-        z-index: 1;
-      }
-      
-      .bulb-glow {
-        position: absolute;
-        top: 0;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background: #f1c40f;
-        opacity: 0;
-        box-shadow: 0 0 15px #f1c40f;
-        transition: opacity 0.3s ease;
-        z-index: 0;
-      }
-      
-      body.light-on .bulb-top {
-        background: #f1c40f;
-        box-shadow: 0 0 8px #f1c40f;
-      }
-      
-      body.light-on .bulb-glow {
-        opacity: 0.6;
-      }
-      
-      .toggle-label {
-        margin-top: 8px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: var(--text);
+
+      .theme-toggle i {
+        font-size: 1.2rem;
         transition: var(--transition);
+      }
+
+      /* Icon visibility logic */
+      .theme-icon-sun {
+        display: inline-block;
+      }
+
+      .theme-icon-moon {
+        display: none;
+      }
+
+      body.light-on .theme-icon-sun {
+        display: none;
+      }
+
+      body.light-on .theme-icon-moon {
+        display: inline-block;
       }
 
       /* Main Content */
@@ -315,35 +273,11 @@
           margin-top: 10px;
           box-shadow: var(--shadow);
         }
-
-        .light-toggle {
-          top: 80px;
-          right: 15px;
-        }
       }
 
       @media (max-width: 576px) {
         .navbar-brand {
           font-size: 1.2rem;
-        }
-
-        .light-toggle {
-          top: 75px;
-        }
-
-        .bulb {
-          width: 40px;
-          height: 70px;
-        }
-
-        .bulb-top {
-          width: 40px;
-          height: 40px;
-        }
-
-        .bulb-glow {
-          width: 40px;
-          height: 40px;
         }
       }
     </style>
@@ -377,16 +311,27 @@
               <a class="nav-link" href="/dashboard">Student Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/admin/dashboard">Admin Dashboard</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="/about">About</a>
             </li>
+            {% if user %}
+            <li class="nav-item">
+              <a class="nav-link" href="/logout-confirm">Logout</a>
+            </li>
+            {% else %}
             <li class="nav-item">
               <a class="nav-link" href="/login">Login</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/register">Sign Up</a>
+            {% endif %}
+            <!-- NEW: Theme Toggle Button -->
+            <li class="nav-item d-flex align-items-center">
+              <div
+                class="theme-toggle"
+                onclick="toggleTheme()"
+                title="Toggle Theme"
+              >
+                <i class="fas fa-sun theme-icon-sun"></i>
+                <i class="fas fa-moon theme-icon-moon"></i>
+              </div>
             </li>
           </ul>
         </div>
@@ -456,17 +401,6 @@
       </div>
     </div>
 
-    <!-- Enhanced Light Mode Toggle -->
-    <div class="light-toggle" onclick="toggleBulb()" title="Toggle Light Mode">
-      <div class="bulb">
-        <div class="bulb-top"></div>
-        <div class="bulb-bottom"></div>
-        <div class="bulb-wire"></div>
-        <div class="bulb-glow"></div>
-      </div>
-      <div class="toggle-label">Dark Mode</div>
-    </div>
-
     <!-- Footer -->
     <footer class="footer">
       <div class="container">
@@ -478,10 +412,19 @@
               teachers, and administrators.
             </p>
             <div class="social-icons">
-              <a href="https://www.linkedin.com/in/kamal-krishna-ghosh-970327246/"><i class="fab fa-facebook-f"></i></a>
-              <a href="https://x.com/kingbadanti1173"><i class="fab fa-twitter"></i></a>
-              <a href="https://www.instagram.com/k_k_g_18/"><i class="fab fa-instagram"></i></a>
-              <a href="https://www.facebook.com/kamal.ghosh.1004"><i class="fab fa-linkedin-in"></i></a>
+              <a
+                href="https://www.linkedin.com/in/kamal-krishna-ghosh-970327246/"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="https://x.com/kingbadanti1173"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="https://www.instagram.com/k_k_g_18/"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="https://www.facebook.com/kamal.ghosh.1004"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
             </div>
           </div>
           <div class="col-md-4 mb-4">
@@ -498,9 +441,7 @@
             <h5>Contact Us</h5>
             <p><i class="fas fa-envelope me-2"></i> kkg9@gmail.com</p>
             <p><i class="fas fa-phone me-2"></i> +1 9099099090</p>
-            <p>
-              <i class="fas fa-map-marker-alt me-2"></i> kolkata
-            </p>
+            <p><i class="fas fa-map-marker-alt me-2"></i> kolkata</p>
           </div>
         </div>
         <div class="copyright">
@@ -517,42 +458,34 @@
 
     {% block scripts %}
     <script>
-      // Enhanced light/dark mode toggle with animations
-      function toggleBulb() {
+      // Enhanced theme toggle function
+      function toggleTheme() {
         const body = document.body;
         body.classList.toggle("light-on");
 
-        // Update the label
-        const label = document.querySelector(".toggle-label");
-        label.textContent = body.classList.contains("light-on")
-          ? "Light Mode"
-          : "Dark Mode";
-
-        // Add glow effect
-        const bulbGlow = document.querySelector(".bulb-glow");
-        bulbGlow.style.animation = "pulse 0.5s";
-        setTimeout(() => {
-          bulbGlow.style.animation = "";
-        }, 500);
-
-        // Save preference to localStorage
+        // Update localStorage
         localStorage.setItem(
           "theme",
           body.classList.contains("light-on") ? "light" : "dark"
         );
+
+        // Add animation effect
+        const icon = document.querySelector(
+          '.theme-toggle i:not([style*="display: none"])'
+        );
+        icon.style.animation = "spin 0.5s ease";
+        setTimeout(() => {
+          icon.style.animation = "";
+        }, 500);
       }
 
       // Check for saved theme preference
       document.addEventListener("DOMContentLoaded", function () {
         const savedTheme = localStorage.getItem("theme");
         const body = document.body;
-        const label = document.querySelector(".toggle-label");
 
         if (savedTheme === "light") {
           body.classList.add("light-on");
-          label.textContent = "Light Mode";
-        } else {
-          label.textContent = "Dark Mode";
         }
 
         // Add active class to current page link
@@ -566,13 +499,12 @@
         });
       });
 
-      // Add pulse animation for the bulb glow
-      const style = document.createElement('style');
+      // Add spin animation
+      const style = document.createElement("style");
       style.textContent = `
-        @keyframes pulse {
-          0% { transform: scale(1); opacity: 0.6; }
-          50% { transform: scale(1.2); opacity: 0.8; }
-          100% { transform: scale(1); opacity: 0.6; }
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
       `;
       document.head.appendChild(style);

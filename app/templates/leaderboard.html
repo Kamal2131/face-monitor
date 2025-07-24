@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard{% endblock %}
+{% block content %}
+<div class="container my-5">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">🏆 Leaderboard</h4>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover text-center">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Student ID</th>
+            <th>Course</th>
+            <th>Total Score</th>
+            <th>Total Marks</th>
+            <th>Percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in leaderboard %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.student_id or 'N/A' }}</td>
+            <td>{{ user.course or 'N/A' }}</td>
+            <td>{{ user.total_score }}</td>
+            <td>{{ user.total_marks }}</td>
+            <td>{{ '%.2f'|format(user.percentage) }}%</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" class="text-muted">No leaderboard data available.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 {% extends "base.html" %}
 
-{% block title %}Home | Exam Portal{% endblock %}
+{% block title %}Home | Quiz Portal{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -9,11 +9,11 @@
   <div class="container py-5">
     <div class="row align-items-center">
       <div class="col-lg-6 mb-5 mb-lg-0">
-        <h1 class="display-3 fw-bold mb-4">Empowering Education with Kamal's Portal</h1>
-        <p class="lead mb-4">A secure and interactive online learning platform built with FastAPI, SQLite, and Bootstrap that enhances student engagement and admin control.</p>
+        <h1 class="display-3 fw-bold mb-4">Test Your Knowledge with Quiz Portal</h1>
+        <p class="lead mb-4">A powerful quiz platform built with FastAPI and Bootstrap featuring timed tests, instant scoring, and comprehensive analytics.</p>
         <div class="d-flex flex-wrap gap-3">
           <a href="#features" class="btn btn-light btn-lg px-4 py-3">Explore Features</a>
-          <a href="/login" class="btn btn-outline-light btn-lg px-4 py-3">Get Started</a>
+          <a href="/login" class="btn btn-outline-light btn-lg px-4 py-3">Start Quiz Now</a>
         </div>
       </div>
       <div class="col-lg-6">
@@ -21,7 +21,7 @@
           <div class="position-absolute top-0 start-0 bg-warning rounded-circle" style="width: 150px; height: 150px; z-index: 0;"></div>
           <div class="position-absolute bottom-0 end-0 bg-info rounded-circle" style="width: 120px; height: 120px; z-index: 0;"></div>
           <div class="position-relative z-1 p-4">
-            <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&auto=format&fit=crop&w=700&q=80" class="img-fluid rounded shadow-lg" alt="Students Learning">
+            <img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&auto=format&fit=crop&w=700&q=80" class="img-fluid rounded shadow-lg" alt="Quiz Interface">
           </div>
         </div>
       </div>
@@ -34,114 +34,20 @@
   <div class="container">
     <div class="row g-4">
       <div class="col-md-3 col-6 text-center">
-        <div class="display-5 fw-bold text-primary">300+</div>
-        <div class="text-muted">Solved DSA Problems</div>
+        <div class="display-5 fw-bold text-primary">500+</div>
+        <div class="text-muted">Quizzes Available</div>
       </div>
       <div class="col-md-3 col-6 text-center">
-        <div class="display-5 fw-bold text-primary">1706</div>
-        <div class="text-muted">LeetCode Rating</div>
+        <div class="display-5 fw-bold text-primary">10K+</div>
+        <div class="text-muted">Questions in Database</div>
       </div>
       <div class="col-md-3 col-6 text-center">
-        <div class="display-5 fw-bold text-primary">5+</div>
-        <div class="text-muted">Major Projects</div>
+        <div class="display-5 fw-bold text-primary">95%</div>
+        <div class="text-muted">User Satisfaction</div>
       </div>
       <div class="col-md-3 col-6 text-center">
         <div class="display-5 fw-bold text-primary">24/7</div>
-        <div class="text-muted">Open Source Ready</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Features Section -->
-<!-- [no changes needed, this section stays same logically and stylistically] -->
-
-<!-- Testimonials -->
-<section class="py-5 bg-light">
-  <div class="container py-5">
-    <div class="text-center mb-5">
-      <h2 class="display-5 fw-bold mb-3">What Developers Say</h2>
-      <p class="lead text-muted">Feedback from people who explored Kamal’s open source projects</p>
-    </div>
-    
-    <div class="row g-4">
-      <!-- Testimonial 1 -->
-      <div class="col-md-4">
-        <div class="card h-100 border-0 shadow-sm">
-          <div class="card-body p-4">
-            <div class="d-flex mb-4">
-              <img src="https://randomuser.me/api/portraits/men/31.jpg" class="rounded-circle me-3" width="60" height="60" alt="Aman Sharma">
-              <div>
-                <h5 class="mb-0">Aman Sharma</h5>
-                <p class="text-muted mb-0">Backend Developer</p>
-              </div>
-            </div>
-            <p class="mb-0">"Kamal's project structure is solid. The FastAPI and role-based routing setup is exactly what I look for in clean backend code."</p>
-          </div>
-          <div class="card-footer bg-transparent border-0 py-3">
-            <div class="text-warning">
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Testimonial 2 -->
-      <div class="col-md-4">
-        <div class="card h-100 border-0 shadow-sm">
-          <div class="card-body p-4">
-            <div class="d-flex mb-4">
-              <img src="https://randomuser.me/api/portraits/men/45.jpg" class="rounded-circle me-3" width="60" height="60" alt="Rahul Mehta">
-              <div>
-                <h5 class="mb-0">Rahul Mehta</h5>
-                <p class="text-muted mb-0">Full Stack Engineer</p>
-              </div>
-            </div>
-            <p class="mb-0">"This is one of the cleanest FastAPI admin dashboards I’ve seen. Auth handling with template responses? Impressive!"</p>
-          </div>
-          <div class="card-footer bg-transparent border-0 py-3">
-            <div class="text-warning">
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Testimonial 3 -->
-      <div class="col-md-4">
-        <div class="card h-100 border-0 shadow-sm">
-          <div class="card-body p-4">
-            <div class="d-flex mb-4">
-              <img src="https://randomuser.me/api/portraits/women/65.jpg" class="rounded-circle me-3" width="60" height="60" alt="Sneha Dutta">
-              <div>
-                <h5 class="mb-0">Sneha Dutta</h5>
-                <p class="text-muted mb-0">Open Source Mentor</p>
-              </div>
-            </div>
-            <p class="mb-0">"Love how the project supports both admin and student dashboards with real user role separation. Looking forward to more contributions!"</p>
-          </div>
-          <div class="card-footer bg-transparent border-0 py-3">
-            <div class="text-warning">
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Call to Action -->
-<section class="py-5 bg-primary text-white">
-  <div class="container py-5">
-    <div class="row justify-content-center text-center">
-      <div class="col-lg-8">
-        <h2 class="display-5 fw-bold mb-4">Join Kamal's Learning Journey</h2>
-        <p class="lead mb-4">Explore real-world backend engineering with FastAPI, JWT, role-based access, and more!</p>
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-          <a href="/register" class="btn btn-light btn-lg px-4 py-3">Create Account</a>
-          <a href="https://github.com/Kamal2131/face-monitor" class="btn btn-outline-light btn-lg px-4 py-3" target="_blank">View GitHub</a>
-        </div>
+        <div class="text-muted">Available Any Time</div>
       </div>
     </div>
   </div>
@@ -151,8 +57,8 @@
 <section id="features" class="py-5">
   <div class="container py-5">
     <div class="text-center mb-5">
-      <h2 class="display-5 fw-bold mb-3">Powerful Learning Features</h2>
-      <p class="lead text-muted">Everything you need for effective online education</p>
+      <h2 class="display-5 fw-bold mb-3">Powerful Quiz Features</h2>
+      <p class="lead text-muted">Everything you need for effective knowledge testing</p>
     </div>
     
     <div class="row g-4">
@@ -161,10 +67,10 @@
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body p-4">
             <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle p-3 mb-4" style="width: 70px; height: 70px;">
-              <i class="bi bi-journal-bookmark fs-2"></i>
+              <i class="bi bi-stopwatch fs-2"></i>
             </div>
-            <h3 class="h4 mb-3">Learning Materials</h3>
-            <p class="text-muted mb-0">Access comprehensive study resources, lecture notes, and educational content organized by subjects and difficulty levels.</p>
+            <h3 class="h4 mb-3">Timed Quizzes</h3>
+            <p class="text-muted mb-0">Challenge yourself with timed quizzes that simulate real exam conditions and improve time management.</p>
           </div>
         </div>
       </div>
@@ -174,10 +80,10 @@
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body p-4">
             <div class="feature-icon bg-success bg-opacity-10 text-success rounded-circle p-3 mb-4" style="width: 70px; height: 70px;">
-              <i class="bi bi-question-circle fs-2"></i>
+              <i class="bi bi-check-circle fs-2"></i>
             </div>
-            <h3 class="h4 mb-3">Interactive Quizzes</h3>
-            <p class="text-muted mb-0">Test your knowledge with our interactive quizzes that provide instant feedback and detailed explanations.</p>
+            <h3 class="h4 mb-3">Instant Results</h3>
+            <p class="text-muted mb-0">Get immediate scoring with detailed answer explanations to understand your mistakes.</p>
           </div>
         </div>
       </div>
@@ -189,8 +95,8 @@
             <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle p-3 mb-4" style="width: 70px; height: 70px;">
               <i class="bi bi-graph-up fs-2"></i>
             </div>
-            <h3 class="h4 mb-3">Progress Tracking</h3>
-            <p class="text-muted mb-0">Monitor your learning journey with detailed analytics and visual progress reports to identify strengths and areas for improvement.</p>
+            <h3 class="h4 mb-3">Performance Analytics</h3>
+            <p class="text-muted mb-0">Track your progress with detailed analytics showing strengths and weaknesses by topic.</p>
           </div>
         </div>
       </div>
@@ -200,10 +106,10 @@
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body p-4">
             <div class="feature-icon bg-warning bg-opacity-10 text-warning rounded-circle p-3 mb-4" style="width: 70px; height: 70px;">
-              <i class="bi bi-people fs-2"></i>
+              <i class="bi bi-trophy fs-2"></i>
             </div>
-            <h3 class="h4 mb-3">User Management</h3>
-            <p class="text-muted mb-0">Admins can easily manage users, assign roles, and monitor activity to ensure a smooth learning environment.</p>
+            <h3 class="h4 mb-3">Leaderboards</h3>
+            <p class="text-muted mb-0">Compete with others and climb the leaderboards based on your quiz performance.</p>
           </div>
         </div>
       </div>
@@ -213,10 +119,10 @@
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body p-4">
             <div class="feature-icon bg-danger bg-opacity-10 text-danger rounded-circle p-3 mb-4" style="width: 70px; height: 70px;">
-              <i class="bi bi-collection fs-2"></i>
+              <i class="bi bi-journals fs-2"></i>
             </div>
-            <h3 class="h4 mb-3">Content Management</h3>
-            <p class="text-muted mb-0">Easily create, organize, and update educational content to keep materials current and relevant.</p>
+            <h3 class="h4 mb-3">Question Bank</h3>
+            <p class="text-muted mb-0">Access thousands of questions across multiple categories and difficulty levels.</p>
           </div>
         </div>
       </div>
@@ -226,10 +132,10 @@
         <div class="card h-100 border-0 shadow-sm">
           <div class="card-body p-4">
             <div class="feature-icon bg-purple bg-opacity-10 text-purple rounded-circle p-3 mb-4" style="width: 70px; height: 70px;">
-              <i class="bi bi-award fs-2"></i>
+              <i class="bi bi-person-badge fs-2"></i>
             </div>
-            <h3 class="h4 mb-3">Achievements</h3>
-            <p class="text-muted mb-0">Earn badges and certificates as you progress through courses and achieve learning milestones.</p>
+            <h3 class="h4 mb-3">Custom Quizzes</h3>
+            <p class="text-muted mb-0">Create and share your own quizzes with customizable settings and questions.</p>
           </div>
         </div>
       </div>
@@ -242,7 +148,7 @@
   <div class="container py-5">
     <div class="text-center mb-5">
       <h2 class="display-5 fw-bold mb-3">What Our Users Say</h2>
-      <p class="lead text-muted">Hear from students and educators using our platform</p>
+      <p class="lead text-muted">Hear from students and professionals using our quiz platform</p>
     </div>
     
     <div class="row g-4">
@@ -254,10 +160,10 @@
               <img src="https://randomuser.me/api/portraits/women/32.jpg" class="rounded-circle me-3" width="60" height="60" alt="Sarah Johnson">
               <div>
                 <h5 class="mb-0">Sarah Johnson</h5>
-                <p class="text-muted mb-0">Student</p>
+                <p class="text-muted mb-0">Medical Student</p>
               </div>
             </div>
-            <p class="mb-0">"My Portal has completely transformed how I study. The quizzes help me identify weak areas, and the progress tracking keeps me motivated!"</p>
+            <p class="mb-0">"This quiz platform helped me ace my board exams. The timed tests and detailed explanations were invaluable!"</p>
           </div>
           <div class="card-footer bg-transparent border-0 py-3">
             <div class="text-warning">
@@ -279,10 +185,10 @@
               <img src="https://randomuser.me/api/portraits/men/54.jpg" class="rounded-circle me-3" width="60" height="60" alt="David Chen">
               <div>
                 <h5 class="mb-0">David Chen</h5>
-                <p class="text-muted mb-0">Educator</p>
+                <p class="text-muted mb-0">IT Professional</p>
               </div>
             </div>
-            <p class="mb-0">"As an instructor, I love how easy it is to manage content and track student progress. The admin tools save me hours every week."</p>
+            <p class="mb-0">"Preparing for my certification exams has never been easier. The performance analytics helped me focus on weak areas."</p>
           </div>
           <div class="card-footer bg-transparent border-0 py-3">
             <div class="text-warning">
@@ -304,10 +210,10 @@
               <img src="https://randomuser.me/api/portraits/women/67.jpg" class="rounded-circle me-3" width="60" height="60" alt="Maria Rodriguez">
               <div>
                 <h5 class="mb-0">Maria Rodriguez</h5>
-                <p class="text-muted mb-0">Parent</p>
+                <p class="text-muted mb-0">Teacher</p>
               </div>
             </div>
-            <p class="mb-0">"I can see exactly where my child needs help through the portal's progress reports. It's made remote learning so much more effective."</p>
+            <p class="mb-0">"Creating custom quizzes for my students has never been easier. The platform saves me hours every week!"</p>
           </div>
           <div class="card-footer bg-transparent border-0 py-3">
             <div class="text-warning">
@@ -324,15 +230,64 @@
   </div>
 </section>
 
+<!-- Quiz Types Section -->
+<section class="py-5">
+  <div class="container py-5">
+    <div class="text-center mb-5">
+      <h2 class="display-5 fw-bold mb-3">Diverse Quiz Formats</h2>
+      <p class="lead text-muted">Multiple ways to test your knowledge</p>
+    </div>
+    
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4 text-center">
+            <div class="mb-4">
+              <i class="bi bi-check2-square text-primary fs-1"></i>
+            </div>
+            <h3 class="h4 mb-3">Multiple Choice</h3>
+            <p class="text-muted">Classic question format with single or multiple correct answers</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4 text-center">
+            <div class="mb-4">
+              <i class="bi bi-fonts text-success fs-1"></i>
+            </div>
+            <h3 class="h4 mb-3">Fill-in-the-Blank</h3>
+            <p class="text-muted">Test precise knowledge with text-based answers</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4 text-center">
+            <div class="mb-4">
+              <i class="bi bi-code-slash text-info fs-1"></i>
+            </div>
+            <h3 class="h4 mb-3">Coding Challenges</h3>
+            <p class="text-muted">Solve programming problems with live code execution</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Call to Action -->
 <section class="py-5 bg-primary text-white">
   <div class="container py-5">
     <div class="row justify-content-center text-center">
       <div class="col-lg-8">
-        <h2 class="display-5 fw-bold mb-4">Ready to Transform Your Learning?</h2>
-        <p class="lead mb-4">Join thousands of students and educators who are already using My Portal to enhance their educational experience.</p>
+        <h2 class="display-5 fw-bold mb-4">Ready to Test Your Knowledge?</h2>
+        <p class="lead mb-4">Join thousands of users improving their skills with our quiz platform</p>
         <div class="d-flex flex-wrap justify-content-center gap-3">
-          <a href="/register" class="btn btn-light btn-lg px-4 py-3">Create Account</a>
+          <a href="/register" class="btn btn-light btn-lg px-4 py-3">Create Free Account</a>
+          <a href="/quizzes" class="btn btn-outline-light btn-lg px-4 py-3">Browse Quizzes</a>
         </div>
       </div>
     </div>
@@ -415,6 +370,17 @@
   .hero-image {
     border-radius: 20px;
     overflow: hidden;
+  }
+  
+  .quiz-type-card {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+  
+  .quiz-type-card:hover {
+    transform: translateY(-10px);
+    border-color: #0d6efd;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
   }
 </style>
 {% endblock %}

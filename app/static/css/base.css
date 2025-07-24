@@ -1,0 +1,329 @@
+:root {
+    --bg: #1a2a3a;
+    --text: #ecf0f1;
+    --primary: #3498db;
+    --secondary: #2c3e50;
+    --accent: #f39c12;
+    --success: #2ecc71;
+    --danger: #e74c3c;
+    --card-bg: rgba(44, 62, 80, 0.8);
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --transition: all 0.3s ease;
+}
+
+body.light-on {
+    --bg: #f8f9fa;
+    --text: #343a40;
+    --secondary: #e9ecef;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: rgba(24, 188, 203, 0.95);
+    color: var(--text);
+    transition: var(--transition);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 70px;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--secondary);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    padding: 0.8rem 1rem;
+    transition: var(--transition);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--text) !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar-brand i {
+    color: var(--accent);
+}
+
+.nav-link {
+    color: var(--text) !important;
+    position: relative;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.2rem;
+    border-radius: 4px;
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    color: var(--accent) !important;
+    font-weight: 600;
+}
+
+.nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 15%;
+    width: 70%;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+.navbar-toggler {
+    border: none;
+    color: var(--text);
+}
+
+/* Enhanced Light Toggle */
+.light-toggle {
+    position: fixed;
+    top: 85px;
+    right: 25px;
+    cursor: pointer;
+    z-index: 999;
+    text-align: center;
+    transition: var(--transition);
+    width: 60px;
+    height: 90px;
+}
+
+.light-toggle:hover {
+    transform: scale(1.05);
+}
+
+.bulb {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bulb-top {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #bdc3c7;
+    transition: var(--transition);
+    z-index: 2;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.bulb-bottom {
+    width: 12px;
+    height: 12px;
+    background: #95a5a6;
+    margin-top: -6px;
+    border-radius: 0 0 3px 3px;
+    z-index: 2;
+}
+
+.bulb-wire {
+    width: 2px;
+    height: 25px;
+    background: #7f8c8d;
+    z-index: 1;
+}
+
+.bulb-glow {
+    position: absolute;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #f1c40f;
+    opacity: 0;
+    box-shadow: 0 0 15px #f1c40f;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+}
+
+body.light-on .bulb-top {
+    background: #f1c40f;
+    box-shadow: 0 0 8px #f1c40f;
+}
+
+body.light-on .bulb-glow {
+    opacity: 0.6;
+}
+
+.toggle-label {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text);
+    transition: var(--transition);
+}
+
+/* Main Content */
+.container.main-content {
+    flex: 1;
+    padding: 2rem 0;
+}
+
+.card {
+    background: var(--card-bg);
+    border: none;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    color: var(--text);
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+    background: rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--secondary);
+    color: var(--text);
+    padding: 2rem 0 1rem;
+    margin-top: auto;
+    transition: var(--transition);
+}
+
+.footer h5 {
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    position: relative;
+    display: inline-block;
+}
+
+.footer h5::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: var(--accent);
+}
+
+.footer-links a {
+    color: var(--text);
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.8rem;
+    transition: var(--transition);
+    opacity: 0.8;
+}
+
+.footer-links a:hover {
+    opacity: 1;
+    color: var(--accent);
+    padding-left: 5px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    margin-top: 1rem;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: var(--text);
+    transition: var(--transition);
+}
+
+.social-icons a:hover {
+    background: var(--accent);
+    transform: translateY(-3px);
+}
+
+.copyright {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .navbar-nav {
+        background: var(--secondary);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 10px;
+        box-shadow: var(--shadow);
+    }
+
+    .light-toggle {
+        top: 80px;
+        right: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .light-toggle {
+        top: 75px;
+    }
+
+    .bulb {
+        width: 40px;
+        height: 70px;
+    }
+
+    .bulb-top {
+        width: 40px;
+        height: 40px;
+    }
+
+    .bulb-glow {
+        width: 40px;
+        height: 40px;
+    }
+}
